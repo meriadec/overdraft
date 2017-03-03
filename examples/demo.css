@@ -91,6 +91,14 @@ h1 > code {
   padding: 5px;
 }
 
+.color {
+  display: block;
+  margin-left: 5px;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #bbb;
+}
+
 pre {
   background: #eee;
   white-space: pre-wrap;

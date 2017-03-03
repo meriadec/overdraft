@@ -133,6 +133,30 @@ class App extends Component {
                 onChange={v => this.editor.setFontSize(v)}
                 label='Font size'
               />
+              <PopupControl
+                isColor
+                value={selection.textColor}
+                onChange={v => this.editor.setTextColor(v)}
+                onRemove={() => this.editor.removeTextColor()}
+                label={(
+                  <span className='flex-center'>
+                    {'Text color'}
+                    <span className='color' style={{ backgroundColor: selection.textColor }} />
+                  </span>
+                )}
+              />
+              <PopupControl
+                isColor
+                value={selection.textBg}
+                onChange={v => this.editor.setTextBg(v)}
+                onRemove={() => this.editor.removeTextBg()}
+                label={(
+                  <span className='flex-center'>
+                    {'Text background'}
+                    <span className='color' style={{ backgroundColor: selection.textBg }} />
+                  </span>
+                )}
+              />
             </div>
           </div>
         </div>

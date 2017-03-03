@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { ChromePicker } from 'react-color'
 
 import Control from './Control'
 
@@ -6,6 +7,13 @@ class PopupControl extends Component {
 
   state = {
     isOpened: false,
+    color: '#000000',
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.isColor && nextProps.value !== this.state.color) {
+      this.setState({ color: nextProps.value })
+    }
   }
 
   componentDidUpdate (prevProps, prevState) {
@@ -36,15 +44,21 @@ class PopupControl extends Component {
     }
   }
 
+  handleColorChange = c => this.setState({ color: c.hex })
+
   handleValidate = () => {
 
     const {
       isNumber,
+      isColor,
       onChange,
     } = this.props
 
     if (isNumber) {
       onChange(Number(this._input.value))
+      this.close()
+    } else if (isColor) {
+      onChange(this.state.color)
       this.close()
     }
   }
@@ -54,11 +68,14 @@ class PopupControl extends Component {
     const {
       label,
       isNumber,
+      isColor,
       value,
+      onRemove,
     } = this.props
 
     const {
       isOpened,
+      color,
     } = this.state
 
     return (
@@ -89,6 +106,28 @@ class PopupControl extends Component {
                 >
                   {'OK'}
                 </button>
+              </div>
+            ) : isColor ? (
+              <div>
+                <ChromePicker
+                  color={color}
+                  onChangeComplete={this.handleColorChange}
+                />
+                <div style={{ marginTop: 5 }}>
+                  <button
+                    className='demo-overdraft-control'
+                    onClick={this.handleValidate}
+                  >
+                    {'OK'}
+                  </button>
+                  <button
+                    className='demo-overdraft-control'
+                    style={{ marginLeft: 5 }}
+                    onClick={onRemove}
+                  >
+                    {'REMOVE'}
+                  </button>
+                </div>
               </div>
             ) : null}
           </div>

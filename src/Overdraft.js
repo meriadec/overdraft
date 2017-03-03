@@ -164,8 +164,8 @@ class Overdraft extends Component {
 
   setTextColor = color => this.setComplex('COLOR', color, true)
   setTextBg = color => this.setComplex('BG', color, true)
-  removeColor = () => this.setComplex('COLOR', null, true)
-  removeBG = () => this.setComplex('BG', null, true)
+  removeTextColor = () => this.setComplex('COLOR', null, true)
+  removeTextBg = () => this.setComplex('BG', null, true)
 
   alignBlock = alignment => this.edit(alignBlock(this.state.editorState, alignment))
 
