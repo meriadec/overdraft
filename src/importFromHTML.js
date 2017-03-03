@@ -7,10 +7,10 @@ const options = {
     if (node.style === null) { return currentStyle }
 
     const textColor = getHexColor(node.style.color)
-    if (textColor) { return currentStyle.add(`COLOR_${textColor}`) }
+    if (textColor) { currentStyle = currentStyle.add(`COLOR_${textColor}`) }
 
     const textBg = getHexColor(node.style.backgroundColor)
-    if (textBg) { return currentStyle.add(`BG_${textBg}`) }
+    if (textBg) { currentStyle = currentStyle.add(`BG_${textBg}`) }
 
     return currentStyle
 

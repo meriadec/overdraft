@@ -8,7 +8,7 @@ import PopupControl from './components/PopupControl'
 class App extends Component {
 
   state = {
-    value: '<h1>Title level 1</h1><p>Paragraph that <b>is bold</b></p>',
+    value: '<h1>Title level 1</h1><p>Paragraph that <b>is bold</b></p><ol><li>First list item</li><li>Second list item</li><li><span style="color:white;"><span style="background-color:#f16b6b;">Third</span></span> list item</li></ol>',
     selection: {},
   }
 
