@@ -1,8 +1,8 @@
 #!/bin/bash
 
 rm -rf dist && \
-  npm run build:examples && \
-  cp -r examples/{index.html,demo.css} dist && \
+  npm run build:demo && \
+  cp -r demo/{index.html,demo.css} dist && \
   cd dist && \
   git init && \
   git remote add origin git@github.com:meriadec/overdraft.git && \

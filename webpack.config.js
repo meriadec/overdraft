@@ -6,7 +6,7 @@ const pkg = require('./package.json')
 const distFolder = path.resolve(__dirname, 'dist')
 
 const config = {
-  entry: './examples/app.js',
+  entry: './demo/app.js',
   output: {
     path: distFolder,
     publicPath: '/',
@@ -26,7 +26,7 @@ const config = {
   ],
 }
 
-if (process.env.BUILD_EXAMPLES) {
+if (process.env.BUILD_DEMO) {
   config.plugins.push(new webpack.optimize.UglifyJsPlugin({
     compress: {
       warnings: false,

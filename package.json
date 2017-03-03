@@ -4,10 +4,10 @@
   "description": "",
   "main": "lib/Overdraft.js",
   "scripts": {
-    "start": "webpack-dev-server --content-base examples/ --inline",
-    "build:examples": "BUILD_EXAMPLES=1 webpack",
+    "start": "webpack-dev-server --content-base demo/ --inline",
+    "build:demo": "BUILD_DEMO=1 webpack",
     "build": "babel src --copy-files -d lib",
-    "lint": "eslint src examples",
+    "lint": "eslint src demo",
     "test": "echo no tests yet"
   },
   "repository": {
