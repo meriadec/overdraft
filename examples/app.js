@@ -4,12 +4,14 @@ import { render } from 'react-dom'
 import Overdraft from '../src/Overdraft'
 import Control from './components/Control'
 import PopupControl from './components/PopupControl'
+import Usage from './Usage'
 
 class App extends Component {
 
   state = {
     value: '<h1>Title level 1</h1><p>Paragraph that <b>is bold</b></p><ol><li>First list item</li><li>Second list item</li><li><span style="color:white;"><span style="background-color:#f16b6b;">Third</span></span> list item</li></ol>',
     selection: {},
+    showOutput: false,
   }
 
   componentDidMount () {
@@ -21,6 +23,7 @@ class App extends Component {
     const {
       value,
       selection,
+      showOutput,
     } = this.state
 
     return (
@@ -28,7 +31,8 @@ class App extends Component {
 
         <h1 className='flex-center demo-heading'>
           <div className='relative'>
-            {'over'}
+            <span style={{ textDecoration: 'line-through' }}>{'o'}</span>
+            {'ver'}
             <span style={{ fontStyle: 'italic' }}>{'draft'}</span>
             <span className='version'>{__VERSION__}</span>
           </div>
@@ -175,7 +179,11 @@ class App extends Component {
           />
         </div>
 
-        <pre className='select-text'>{value}</pre>
+        {showOutput && (
+          <pre className='select-text'>{value}</pre>
+        )}
+
+        <Usage />
 
       </div>
     )
