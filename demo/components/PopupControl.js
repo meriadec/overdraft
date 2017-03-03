@@ -63,6 +63,11 @@ class PopupControl extends Component {
     }
   }
 
+  handleRemove = () => {
+    this.props.onRemove()
+    this.close()
+  }
+
   render () {
 
     const {
@@ -70,7 +75,6 @@ class PopupControl extends Component {
       isNumber,
       isColor,
       value,
-      onRemove,
     } = this.props
 
     const {
@@ -123,7 +127,7 @@ class PopupControl extends Component {
                   <button
                     className='demo-overdraft-control'
                     style={{ marginLeft: 5 }}
-                    onClick={onRemove}
+                    onClick={this.handleRemove}
                   >
                     {'REMOVE'}
                   </button>
