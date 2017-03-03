@@ -1,0 +1,84 @@
+* {
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: default;
+}
+
+body {
+  padding: 20px;
+  font-family: serif;
+}
+
+a {
+  cursor: pointer;
+}
+
+.select-text, .select-text * {
+  user-select: text;
+  -webkit-user-select: text;
+  cursor: text;
+}
+
+h1 > code {
+  margin-left: 15px;
+  font-size: 12px;
+  background: #eee;
+  color: #f16b6b;
+  padding: 3px;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+}
+
+.demo-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.demo-overdraft-container {
+  border: 2px dashed lightgrey;
+}
+
+.demo-overdraft-control {
+  padding: 0 8px;
+  line-height: 30px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  font-weight: bold;
+}
+
+.demo-overdraft-control.active {
+  background: #f16b6b;
+  color: white;
+}
+
+.demo-overdraft-controls {
+  margin-bottom: 5px;
+}
+
+.demo-overdraft-controls-row {
+  display: flex;
+  align-items: center;
+}
+
+.demo-overdraft-controls-row + .demo-overdraft-controls-row {
+  margin-top: 3px;
+}
+
+.demo-overdraft-controls-group {
+  display: flex;
+  align-items: center;
+}
+
+.demo-overdraft-controls-group + .demo-overdraft-controls-group {
+  margin-left: 3px;
+}
+
+pre {
+  background: #eee;
+  white-space: pre-wrap;
+  font-size: 16px;
+  user-select: text;
+  -webkit-user-select: text;
+}
