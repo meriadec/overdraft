@@ -48,6 +48,9 @@ const options = {
     if (style.startsWith('BG_')) {
       return <span style={{ backgroundColor: style.split('BG_')[1] }} />
     }
+    if (style === 'BOLD') {
+      return <b />
+    }
     if (style === 'STRIKETHROUGH') {
       return <span style={{ textDecoration: 'line-through' }} />
     }

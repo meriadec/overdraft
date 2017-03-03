@@ -9,5 +9,5 @@ function getBlockAlignment (block) {
 }
 
 export default function blockStyleFn (block) {
-  return `alignment--${getBlockAlignment(block)}`
+  return `alignment--${getBlockAlignment(block)} block-${block.get('type')}`
 }
