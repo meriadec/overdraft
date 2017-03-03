@@ -1,3 +1,5 @@
+![logo](logo.png)
+
 # overdraft
 
 DEMO: https://meriadec.github.io/overdraft/
