@@ -41,6 +41,13 @@ export default function getSelectionAttributes (state, previous = null) {
       return fontSize
     }, null),
 
+    lineHeight: styles.reduce((fontSize, name) => {
+      if (name.startsWith('LINEHEIGHT_')) {
+        return name.split('LINEHEIGHT_')[1]
+      }
+      return fontSize
+    }, null),
+
     textColor: styles.reduce((color, name) => {
       if (name.startsWith('COLOR_')) {
         return name.split('COLOR_')[1]

@@ -9,7 +9,7 @@ import Usage from './Usage'
 class App extends Component {
 
   state = {
-    value: '<h1>Title level 1</h1><p>Paragraph that <b>is bold</b></p><ol><li>First list item</li><li>Second list item</li><li><span style="color:white;"><span style="background-color:#f16b6b;">Third</span></span> list item</li></ol>',
+    value: '<h1>Title level 1</h1><p>Bacon <u>ipsum</u> dolor amet frankfurter bresaola corned <b>beef</b> shank andouille pig filet mignon pork belly kielbasa short ribs hamburger meatball pork loin beef chicken. Sirloin chuck picanha, ham hock capicola beef cow biltong.</p><ol><li>First list item</li><li>Second list item</li><li><span style="color:white;"><span style="background-color:#f16b6b;">Third</span></span> list item</li></ol>',
     selection: {},
     showOutput: false,
   }
@@ -148,6 +148,12 @@ class App extends Component {
                 label='Font size'
               />
               <PopupControl
+                isNumber
+                value={selection.lineHeight}
+                onChange={v => this.editor.setLineHeight(v)}
+                label='Line height'
+              />
+              <PopupControl
                 isColor
                 value={selection.textColor}
                 onChange={v => this.editor.setTextColor(v)}
@@ -188,6 +194,9 @@ class App extends Component {
           <a href='' onClick={this.toggleOutput}>
             {`${showOutput ? 'Hide' : 'Show'} output`}
           </a>
+          <span className='arrow'>
+            {!showOutput ? ' ▶' : ' ▼'}
+          </span>
         </div>
 
         {showOutput && (

@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import debounce from 'lodash/debounce'
 import {
+  Modifier,
   Editor,
   EditorState,
   RichUtils,
@@ -14,6 +15,7 @@ import customStyleFn from './customStyleFn'
 import getSelectionAttributes from './getSelectionAttributes'
 import alignBlock from './alignBlock'
 import removeComplex from './removeComplex'
+import getSelectionKeys from './getSelectionKeys'
 
 class Overdraft extends Component {
 
@@ -106,43 +108,31 @@ class Overdraft extends Component {
 
   setLineHeight = (size) => {
 
-    const { editorState } = this.state
+    let { editorState } = this.state
+    let currentContent = editorState.getCurrentContent()
 
-    console.log(`setting line height to ${size} (not implemented)`) // eslint-disable-line
+    const backupSelection = editorState.getSelection()
+    const s = getSelectionKeys(backupSelection)
 
-    // const currentContent = editorState.getCurrentContent()
+    const selectionState = SelectionState.createEmpty()
+    const endBlock = currentContent.getBlockForKey(s.focus)
+    const blocksSelection = selectionState.merge({
+      anchorKey: s.anchor,
+      anchorOffset: 0,
+      focusKey: s.focus,
+      focusOffset: endBlock.getText().length,
+    })
 
-    // const backupSelection = editorState.getSelection()
-    // const s = getSelectionKeys(backupSelection)
+    editorState = removeComplex(editorState, blocksSelection, 'LINEHEIGHT')
+    currentContent = editorState.getCurrentContent()
 
-    // const selectionState = SelectionState.createEmpty()
-    // const endBlock = currentContent.getBlockForKey(s.focus)
-    // const blocksSelection = selectionState.merge({
-    //   anchorKey: s.anchor,
-    //   anchorOffset: 0,
-    //   focusKey: s.focus,
-    //   focusOffset: endBlock.getText().length,
-    // })
+    const styleName = `LINEHEIGHT_${size}`
+    const modified = Modifier.applyInlineStyle(currentContent, blocksSelection, styleName)
 
-    // editorState = removeComplex(editorState, blocksSelection, 'LINE_HEIGHT')
+    currentContent = currentContent.merge(modified)
 
-    // const styleName = `LINE_HEIGHT_${size}`
-    // let modified = Modifier.applyInlineStyle(currentContent, blocksSelection, styleName)
-
-    // editorState = EditorState.push(editorState, modified, 'change-line-height')
-
-    // editorState = EditorState.forceSelection(editorState, blocksSelection)
-
-    // const styles = editorState.getCurrentInlineStyle()
-
-    // editorState = styles.reduce((state, styleKey) => {
-    //   if (styleKey.startsWith(`${prefix}_`)) {
-    //     return RichUtils.toggleInlineStyle(state, styleKey)
-    //   }
-    //   return state
-    // }, editorState)
-
-    // editorState = EditorState.forceSelection(editorState, backupSelection)
+    editorState = EditorState.createWithContent(currentContent)
+    editorState = EditorState.forceSelection(editorState, backupSelection)
 
     this.edit(editorState, true)
 

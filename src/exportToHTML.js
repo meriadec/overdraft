@@ -16,7 +16,7 @@ const options = {
   blockToHTML: (block) => {
     const style = {}
     const align = block.inlineStyleRanges.find(s => s.style.startsWith('ALIGN_'))
-    const lineHeight = block.inlineStyleRanges.find(s => s.style.startsWith('LINE_HEIGHT_'))
+    const lineHeight = block.inlineStyleRanges.find(s => s.style.startsWith('LINEHEIGHT_'))
     if (align) {
       const alignVal = align.style.split('_')[1].toLowerCase()
       if (alignVal !== 'left') {
@@ -24,7 +24,7 @@ const options = {
       }
     }
     if (lineHeight) {
-      const lineHeightVal = lineHeight.style.split('_')[2].toLowerCase()
+      const lineHeightVal = lineHeight.style.split('_')[1].toLowerCase()
       style.lineHeight = `${lineHeightVal}px`
     }
     if (block.type === 'ordered-list-item') {

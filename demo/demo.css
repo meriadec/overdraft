@@ -117,6 +117,10 @@ h1 > code {
   border: 1px solid #bbb;
 }
 
+.arrow {
+  color: #777;
+}
+
 pre {
   background: #eee;
   white-space: pre-wrap;

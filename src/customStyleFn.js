@@ -10,8 +10,8 @@ export default function customStyleFn (style) {
     if (styleName.startsWith('FONTSIZE_')) {
       styles.fontSize = Number(styleName.split('FONTSIZE_')[1])
     }
-    if (styleName.startsWith('LINE_HEIGHT_')) {
-      styles.lineHeight = `${styleName.split('LINE_HEIGHT_')[1]}px`
+    if (styleName.startsWith('LINEHEIGHT_')) {
+      styles.lineHeight = `${styleName.split('LINEHEIGHT_')[1]}px`
     }
     return styles
   }, {})
