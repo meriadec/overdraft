@@ -1,7 +1,7 @@
 {
   "name": "overdraft",
-  "version": "0.2.0",
-  "description": "",
+  "version": "0.2.1",
+  "description": "Enhanced Rich-Text Editor using Draft.js",
   "main": "lib/Overdraft.js",
   "scripts": {
     "start": "webpack-dev-server --content-base demo/ --inline",
