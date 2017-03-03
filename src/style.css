@@ -1,0 +1,15 @@
+.alignment--ALIGN_LEFT .public-DraftStyleDefault-block {
+  text-align: left;
+}
+
+.alignment--ALIGN_CENTER .public-DraftStyleDefault-block {
+  text-align: center;
+}
+
+.alignment--ALIGN_RIGHT .public-DraftStyleDefault-block {
+  text-align: right;
+}
+
+.alignment--ALIGN_JUSTIFY .public-DraftStyleDefault-block {
+  text-align: justify;
+}

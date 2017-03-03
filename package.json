@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server --content-base examples/ --inline",
     "build:examples": "BUILD_EXAMPLES=1 webpack",
-    "build": "babel src -d lib",
+    "build": "babel src --copy-files -d lib",
     "lint": "eslint src examples",
     "test": "echo no tests yet"
   },
@@ -41,7 +41,8 @@
   },
   "dependencies": {
     "draft-convert": "^1.4.2",
-    "draft-js": "^0.10.0"
+    "draft-js": "^0.10.0",
+    "lodash": "^4.17.4"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",

@@ -11,6 +11,10 @@ class App extends Component {
     selection: {},
   }
 
+  componentDidMount () {
+    this.editor.focus()
+  }
+
   render () {
 
     const {
@@ -39,34 +43,61 @@ class App extends Component {
               <Control
                 label='H1'
                 active={selection.isH1}
-                onPress={() => this._editor.setBlockType('header-one')}
+                onPress={() => this.editor.setBlockType('header-one')}
               />
               <Control
                 label='H2'
                 active={selection.isH2}
-                onPress={() => this._editor.setBlockType('header-two')}
+                onPress={() => this.editor.setBlockType('header-two')}
               />
               <Control
                 label='H3'
                 active={selection.isH3}
-                onPress={() => this._editor.setBlockType('header-three')}
+                onPress={() => this.editor.setBlockType('header-three')}
               />
               <Control
                 label='P'
                 active={selection.isP}
-                onPress={() => this._editor.setBlockType('unstyled')}
+                onPress={() => this.editor.setBlockType('unstyled')}
               />
             </div>
             <div className='demo-overdraft-controls-group'>
               <Control
                 active={selection.isListUnordered}
-                onPress={() => this._editor.setBlockType('unordered-list-item')}
+                onPress={() => this.editor.setBlockType('unordered-list-item')}
                 label='UL'
               />
               <Control
                 active={selection.isListOrdered}
-                onPress={() => this._editor.setBlockType('ordered-list-item')}
+                onPress={() => this.editor.setBlockType('ordered-list-item')}
                 label='OL'
+              />
+            </div>
+          </div>
+          <div className='demo-overdraft-controls-row'>
+            <div className='demo-overdraft-controls-group'>
+              <Control
+                active={selection.isTextLeft}
+                onPress={() => this.editor.alignBlock('left')}
+                label='left'
+              />
+
+              <Control
+                active={selection.isTextCenter}
+                onPress={() => this.editor.alignBlock('center')}
+                label='center'
+              />
+
+              <Control
+                active={selection.isTextJustify}
+                onPress={() => this.editor.alignBlock('justify')}
+                label='justify'
+              />
+
+              <Control
+                active={selection.isTextRight}
+                onPress={() => this.editor.alignBlock('right')}
+                label='right'
               />
             </div>
           </div>
@@ -75,23 +106,23 @@ class App extends Component {
               <Control
                 label='B'
                 active={selection.isBold}
-                onPress={() => this._editor.setBold()}
+                onPress={() => this.editor.setBold()}
               />
               <Control
                 active={selection.isItalic}
-                onPress={() => this._editor.setItalic()}
+                onPress={() => this.editor.setItalic()}
                 label='I'
                 style={{ fontStyle: 'italic' }}
               />
               <Control
                 active={selection.isLinethrough}
-                onPress={() => this._editor.setStrikeThrough()}
+                onPress={() => this.editor.setStrikeThrough()}
                 label='S'
                 style={{ textDecoration: 'line-through' }}
               />
               <Control
                 active={selection.isUnderline}
-                onPress={() => this._editor.setUnderline()}
+                onPress={() => this.editor.setUnderline()}
                 style={{ textDecoration: 'underline' }}
                 label='U'
               />
@@ -101,7 +132,7 @@ class App extends Component {
 
         <div className='demo-overdraft-container select-text'>
           <Overdraft
-            ref={n => this._editor = n}
+            ref={n => this.editor = n}
             value={value}
             onChange={value => this.setState({ value })}
             onSelectionChange={selection => this.setState({ selection })}

@@ -1,8 +1,6 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import debounce from 'lodash/debounce'
 import {
-  Modifier,
-  ContentState,
   Editor,
   EditorState,
   RichUtils,
@@ -14,49 +12,62 @@ import exportToHTML from './exportToHTML'
 import blockStyleFn from './blockStyleFn'
 import customStyleFn from './customStyleFn'
 import getSelectionAttributes from './getSelectionAttributes'
-
-function getSelectionKeys (selection) {
-  if (selection.getIsBackward()) {
-    return {
-      anchor: selection.getFocusKey(),
-      focus: selection.getAnchorKey(),
-    }
-  }
-  return {
-    anchor: selection.getAnchorKey(),
-    focus: selection.getFocusKey(),
-  }
-
-}
+import alignBlock from './alignBlock'
+import removeComplex from './removeComplex'
 
 class Overdraft extends Component {
+
+  static propTypes = {
+    value: PropTypes.string.isRequired,
+    onChange: PropTypes.func,
+    onSelectionChange: PropTypes.func,
+    preventSSR: PropTypes.bool,
+  }
 
   state = {
     editorState: null,
   }
 
-  componentDidMount () {
-    window.requestAnimationFrame(() => {
-
-      const { value } = this.props
-
-      const contentState = importFromHTML(value)
-      const editorState = EditorState.createWithContent(contentState)
-
-      this.setState({ editorState })
-
-    })
+  componentWillMount () {
+    if (!this.props.preventSSR) {
+      this.loadHTML(this.props.value)
+    }
   }
+
+  componentDidMount () {
+    if (this.props.preventSSR) {
+      window.requestAnimationFrame(() => this.loadHTML(this.props.value))
+    }
+  }
+
+  loadHTML = value => {
+    const contentState = importFromHTML(value)
+    let editorState = EditorState.createWithContent(contentState)
+    editorState = this.focusEnd(editorState)
+    this.setState({ editorState })
+    this.batchSelectionChange(editorState)
+  }
+
+  focusEnd = editorState => {
+    const contentState = editorState.getCurrentContent()
+    const blockMap = contentState.getBlockMap()
+    const lastBlockKey = blockMap.findLastKey(() => true)
+    const lastBlock = blockMap.last()
+    const lastBlockLength = lastBlock.getText().length
+    const selectionState = SelectionState
+      .createEmpty(lastBlockKey)
+      .merge({ anchorOffset: lastBlockLength, focusOffset: lastBlockLength })
+    return EditorState.forceSelection(editorState, selectionState)
+  }
+
+  focus = () => this._editor.focus()
+
+  // -- HANDLE MODIFICATIONS --
 
   edit = (editorState, focusAfter = false) => {
     this.setState({ editorState }, focusAfter ? this.focus : undefined)
     this.batchSelectionChange(editorState)
     this.batchOnChange(editorState)
-  }
-
-  focus = () => {
-    if (!this._editor) { return }
-    this._editor.focus()
   }
 
   batchOnChange = debounce(editorState => {
@@ -76,38 +87,49 @@ class Overdraft extends Component {
     }
   }, 25)
 
-  setBold = () => this.edit(RichUtils.toggleInlineStyle(this.state.editorState, 'BOLD'))
-  setItalic = () => this.edit(RichUtils.toggleInlineStyle(this.state.editorState, 'ITALIC'))
-  setStrikeThrough = () => this.edit(RichUtils.toggleInlineStyle(this.state.editorState, 'STRIKETHROUGH'))
-  setUnderline = () => this.edit(RichUtils.toggleInlineStyle(this.state.editorState, 'UNDERLINE'))
-  setBlockType = blockType => this.edit(RichUtils.toggleBlockType(this.state.editorState, blockType))
+  // -- RICH TEXT EDITING --
+
+  toggleInline = styleName => this.edit(
+    RichUtils.toggleInlineStyle(this.state.editorState, styleName)
+  )
+
+  setBold = () => this.toggleInline('BOLD')
+  setItalic = () => this.toggleInline('ITALIC')
+  setStrikeThrough = () => this.toggleInline('STRIKETHROUGH')
+  setUnderline = () => this.toggleInline('UNDERLINE')
+
+  setBlockType = blockType => this.edit(
+    RichUtils.toggleBlockType(this.state.editorState, blockType)
+  )
 
   setFontSize = (size) => this.setComplex('FONTSIZE', size, true)
 
   setLineHeight = (size) => {
 
-    let { editorState } = this.state
+    const { editorState } = this.state
 
-    const currentContent = editorState.getCurrentContent()
+    console.log(`setting line height to ${size} (not implemented)`) // eslint-disable-line
 
-    const backupSelection = editorState.getSelection()
-    const s = getSelectionKeys(backupSelection)
+    // const currentContent = editorState.getCurrentContent()
 
-    const selectionState = SelectionState.createEmpty()
-    const endBlock = currentContent.getBlockForKey(s.focus)
-    const blocksSelection = selectionState.merge({
-      anchorKey: s.anchor,
-      anchorOffset: 0,
-      focusKey: s.focus,
-      focusOffset: endBlock.getText().length,
-    })
+    // const backupSelection = editorState.getSelection()
+    // const s = getSelectionKeys(backupSelection)
 
-    editorState = removeComplex(editorState, blocksSelection, 'LINE_HEIGHT')
+    // const selectionState = SelectionState.createEmpty()
+    // const endBlock = currentContent.getBlockForKey(s.focus)
+    // const blocksSelection = selectionState.merge({
+    //   anchorKey: s.anchor,
+    //   anchorOffset: 0,
+    //   focusKey: s.focus,
+    //   focusOffset: endBlock.getText().length,
+    // })
 
-    const styleName = `LINE_HEIGHT_${size}`
-    let modified = Modifier.applyInlineStyle(currentContent, blocksSelection, styleName)
+    // editorState = removeComplex(editorState, blocksSelection, 'LINE_HEIGHT')
 
-    editorState = EditorState.push(editorState, modified, 'change-line-height')
+    // const styleName = `LINE_HEIGHT_${size}`
+    // let modified = Modifier.applyInlineStyle(currentContent, blocksSelection, styleName)
+
+    // editorState = EditorState.push(editorState, modified, 'change-line-height')
 
     // editorState = EditorState.forceSelection(editorState, blocksSelection)
 
@@ -120,7 +142,7 @@ class Overdraft extends Component {
     //   return state
     // }, editorState)
 
-    editorState = EditorState.forceSelection(editorState, backupSelection)
+    // editorState = EditorState.forceSelection(editorState, backupSelection)
 
     this.edit(editorState, true)
 
@@ -145,37 +167,7 @@ class Overdraft extends Component {
   removeColor = () => this.setComplex('COLOR', null, true)
   removeBG = () => this.setComplex('BG', null, true)
 
-  alignBlock = alignment => {
-
-    let { editorState } = this.state
-
-    const currentContent = editorState.getCurrentContent()
-    const backupSelection = editorState.getSelection()
-    const s = getSelectionKeys(backupSelection)
-    const endBlock = currentContent.getBlockForKey(s.focus)
-    const selectionState = SelectionState.createEmpty()
-
-    const blocksSelection = selectionState.merge({
-      anchorKey: s.anchor,
-      anchorOffset: 0,
-      focusKey: s.focus,
-      focusOffset: endBlock.getText().length,
-    })
-
-    const styleName = `ALIGN_${alignment.toUpperCase()}`
-    const alignments = ['ALIGN_LEFT', 'ALIGN_CENTER', 'ALIGN_JUSTIFY', 'ALIGN_RIGHT']
-
-    let modified = alignments.reduce((content, styleName) => {
-      return Modifier.removeInlineStyle(content, blocksSelection, styleName)
-    }, currentContent)
-
-    modified = Modifier.applyInlineStyle(modified, blocksSelection, styleName)
-    editorState = EditorState.push(editorState, modified, 'change-alignment')
-    editorState = EditorState.forceSelection(editorState, backupSelection)
-
-    this.edit(editorState, true)
-
-  }
+  alignBlock = alignment => this.edit(alignBlock(this.state.editorState, alignment))
 
   render () {
 
@@ -208,43 +200,3 @@ class Overdraft extends Component {
 }
 
 export default Overdraft
-
-function removeComplex (editorState, selectionState, prefix) {
-
-  const s = getSelectionKeys(selectionState)
-
-  const start = selectionState.getStartOffset()
-  const end = selectionState.getEndOffset()
-
-  const currentContent = editorState.getCurrentContent()
-
-  // retrieve all blocks that we have selected
-  let found = false
-  const currentBlocks = currentContent.getBlockMap()
-  const blocks = currentBlocks
-    .skipUntil((v, k) => k === s.anchor)
-    .takeUntil((v, k) => {
-      if (found) { return true }
-      if (k === s.focus) { found = true }
-    })
-    .map((v, k) => {
-      const firstIndex = k === s.anchor ? start : -1
-      const lastIndex = k === s.focus ? end : -1
-      return v.set('characterList', v.get('characterList').map((v, i) => {
-        if (firstIndex > -1 && i < firstIndex) { return v }
-        if (lastIndex > -1 && i >= lastIndex) { return v }
-        return v.set('style', v.get('style').filter(v => {
-          return !v.startsWith(prefix)
-        }))
-      }))
-    })
-
-  const newBlocks = currentBlocks.merge(blocks)
-  const newContent = ContentState.createFromBlockArray(newBlocks.toArray())
-
-  editorState = EditorState.createWithContent(newContent)
-  editorState = EditorState.forceSelection(editorState, selectionState)
-
-  return editorState
-
-}
