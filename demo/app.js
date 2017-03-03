@@ -18,6 +18,11 @@ class App extends Component {
     this.editor.focus()
   }
 
+  toggleOutput = e => {
+    e.preventDefault()
+    this.setState({ showOutput: !this.state.showOutput })
+  }
+
   render () {
 
     const {
@@ -177,6 +182,12 @@ class App extends Component {
             onChange={value => this.setState({ value })}
             onSelectionChange={selection => this.setState({ selection })}
           />
+        </div>
+
+        <div style={{ marginTop: 10 }}>
+          <a href='' onClick={this.toggleOutput}>
+            {`${showOutput ? 'Hide' : 'Show'} output`}
+          </a>
         </div>
 
         {showOutput && (
