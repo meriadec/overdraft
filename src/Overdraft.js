@@ -102,7 +102,7 @@ class Overdraft extends Component {
     RichUtils.toggleBlockType(this.state.editorState, blockType)
   )
 
-  setFontSize = (size) => this.setComplex('FONTSIZE', size, true)
+  setFontSize = (size) => this.setComplex('FONTSIZE', size)
 
   setLineHeight = (size) => {
 

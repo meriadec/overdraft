@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { render } from 'react-dom'
 
 import Overdraft from '../src/Overdraft'
-import Control from './Control'
+import Control from './components/Control'
+import PopupControl from './components/PopupControl'
 
 class App extends Component {
 
@@ -125,6 +126,12 @@ class App extends Component {
                 onPress={() => this.editor.setUnderline()}
                 style={{ textDecoration: 'underline' }}
                 label='U'
+              />
+              <PopupControl
+                isNumber
+                value={selection.fontSize}
+                onChange={v => this.editor.setFontSize(v)}
+                label='Font size'
               />
             </div>
           </div>

@@ -35,11 +35,11 @@ export default function getSelectionAttributes (state, previous = null) {
     isUnderline: styles.includes('UNDERLINE'),
 
     fontSize: styles.reduce((fontSize, name) => {
-      if (name.startsWith('FONT_SIZE_')) {
-        return name.split('FONT_SIZE_')[1]
+      if (name.startsWith('FONTSIZE_')) {
+        return name.split('FONTSIZE_')[1]
       }
       return fontSize
-    }, 13),
+    }, null),
 
     textColor: styles.reduce((color, name) => {
       if (name.startsWith('COLOR_')) {

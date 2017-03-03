@@ -2,6 +2,7 @@
   user-select: none;
   -webkit-user-select: none;
   cursor: default;
+  box-sizing: border-box;
 }
 
 body {
@@ -73,6 +74,21 @@ h1 > code {
 
 .demo-overdraft-controls-group + .demo-overdraft-controls-group {
   margin-left: 3px;
+}
+
+.PopupControl {
+  position: relative;
+}
+
+.PopupControl .PopupControl--popup {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 100%;
+  background: white;
+  border: 1px solid #f16b6b;
+  margin-top: -1px;
+  padding: 5px;
 }
 
 pre {
