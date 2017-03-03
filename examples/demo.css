@@ -14,6 +14,10 @@ a {
   cursor: pointer;
 }
 
+.relative {
+  position: relative;
+}
+
 .select-text, .select-text * {
   user-select: text;
   -webkit-user-select: text;
@@ -28,9 +32,19 @@ h1 > code {
   padding: 3px;
 }
 
+.version {
+  position: absolute;
+  right: 0; top: 100%;
+  font-size: 12px;
+}
+
 .flex-center {
   display: flex;
   align-items: center;
+}
+
+.demo-heading {
+  margin-bottom: 2em;
 }
 
 .demo-container {

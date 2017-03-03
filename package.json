@@ -37,6 +37,9 @@
     ],
     "rules": {
       "no-undefined": 0
+    },
+    "globals": {
+      "__VERSION__": false
     }
   },
   "dependencies": {

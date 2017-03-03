@@ -26,17 +26,22 @@ class App extends Component {
     return (
       <div className='demo-container'>
 
-        <h1 className='flex-center'>
-          {'overdraft'}
+        <h1 className='flex-center demo-heading'>
+          <div className='relative'>
+            {'over'}
+            <span style={{ fontStyle: 'italic' }}>{'draft'}</span>
+            <span className='version'>{__VERSION__}</span>
+          </div>
           <code className='select-text'>{'npm i overdraft'}</code>
-        </h1>
-
-        <p>
-          {'Source on github: '}
-          <a target='_blank' rel='noopener noreferrer' href='https://github.com/meriadec/overdraft'>
-            {'https://github.com/meriadec/overdraft'}
+          <a
+            style={{ marginLeft: 'auto', fontSize: 16 }}
+            target='_blank'
+            rel='noopener noreferrer'
+            href='https://github.com/meriadec/overdraft'
+          >
+            {'See on GitHub'}
           </a>
-        </p>
+        </h1>
 
         <div className='demo-overdraft-controls'>
           <div className='demo-overdraft-controls-row'>

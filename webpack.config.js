@@ -1,6 +1,8 @@
 const path = require('path')
 const webpack = require('webpack')
 
+const pkg = require('./package.json')
+
 const distFolder = path.resolve(__dirname, 'dist')
 
 const config = {
@@ -17,7 +19,11 @@ const config = {
       loaders: ['babel'],
     }],
   },
-  plugins: [],
+  plugins: [
+    new webpack.DefinePlugin({
+      __VERSION__: JSON.stringify(pkg.version),
+    }),
+  ],
 }
 
 if (process.env.BUILD_EXAMPLES) {
