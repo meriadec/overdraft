@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import debounce from 'lodash/debounce'
 import {
-  Modifier,
   Editor,
   EditorState,
   RichUtils,
@@ -13,9 +12,8 @@ import exportToHTML from './exportToHTML'
 import blockStyleFn from './blockStyleFn'
 import customStyleFn from './customStyleFn'
 import getSelectionAttributes from './getSelectionAttributes'
-import alignBlock from './alignBlock'
 import removeComplex from './removeComplex'
-import getSelectionKeys from './getSelectionKeys'
+import setBlockComplex from './setBlockComplex'
 
 class Overdraft extends Component {
 
@@ -66,11 +64,13 @@ class Overdraft extends Component {
 
   // -- HANDLE MODIFICATIONS --
 
-  edit = (editorState, focusAfter = false) => {
+  edit = (editorState, focusAfter = true) => {
     this.setState({ editorState }, focusAfter ? this.focus : undefined)
     this.batchSelectionChange(editorState)
     this.batchOnChange(editorState)
   }
+
+  editWithoutFocus = (editorState) => this.edit(editorState, false)
 
   batchOnChange = debounce(editorState => {
     const content = editorState.getCurrentContent()
@@ -91,65 +91,27 @@ class Overdraft extends Component {
 
   // -- RICH TEXT EDITING --
 
-  toggleInline = styleName => this.edit(
-    RichUtils.toggleInlineStyle(this.state.editorState, styleName)
-  )
+  toggleInline = styleName => this.edit(RichUtils.toggleInlineStyle(this.state.editorState, styleName), false)
 
   setBold = () => this.toggleInline('BOLD')
   setItalic = () => this.toggleInline('ITALIC')
   setStrikeThrough = () => this.toggleInline('STRIKETHROUGH')
   setUnderline = () => this.toggleInline('UNDERLINE')
 
-  setBlockType = blockType => this.edit(
-    RichUtils.toggleBlockType(this.state.editorState, blockType)
-  )
+  setBlockType = blockType => this.edit(RichUtils.toggleBlockType(this.state.editorState, blockType), false)
 
   setFontSize = (size) => this.setComplex('FONTSIZE', size)
 
-  setLineHeight = (size) => {
-
-    let { editorState } = this.state
-    let currentContent = editorState.getCurrentContent()
-
-    const backupSelection = editorState.getSelection()
-    const s = getSelectionKeys(backupSelection)
-
-    const selectionState = SelectionState.createEmpty()
-    const endBlock = currentContent.getBlockForKey(s.focus)
-    const blocksSelection = selectionState.merge({
-      anchorKey: s.anchor,
-      anchorOffset: 0,
-      focusKey: s.focus,
-      focusOffset: endBlock.getText().length,
-    })
-
-    editorState = removeComplex(editorState, blocksSelection, 'LINEHEIGHT')
-    currentContent = editorState.getCurrentContent()
-
-    const styleName = `LINEHEIGHT_${size}`
-    const modified = Modifier.applyInlineStyle(currentContent, blocksSelection, styleName)
-
-    currentContent = currentContent.merge(modified)
-
-    editorState = EditorState.createWithContent(currentContent)
-    editorState = EditorState.forceSelection(editorState, backupSelection)
-
-    this.edit(editorState, true)
-
-  }
-
-  setComplex = (prefix, value, focusAfter = false) => {
+  setComplex = (prefix, value) => {
 
     let { editorState } = this.state
 
     const selectionState = editorState.getSelection()
     editorState = removeComplex(editorState, selectionState, prefix)
 
-    if (!value) {
-      return this.edit(editorState)
-    }
+    if (!value) { return this.edit(editorState) }
 
-    this.edit(RichUtils.toggleInlineStyle(editorState, `${prefix}_${value}`), focusAfter)
+    this.edit(RichUtils.toggleInlineStyle(editorState, `${prefix}_${value}`))
   }
 
   setTextColor = color => this.setComplex('COLOR', color, true)
@@ -157,7 +119,12 @@ class Overdraft extends Component {
   removeTextColor = () => this.setComplex('COLOR', null, true)
   removeTextBg = () => this.setComplex('BG', null, true)
 
-  alignBlock = alignment => this.edit(alignBlock(this.state.editorState, alignment))
+  setBlockComplex = (prefix, value) => this.edit(
+    setBlockComplex(this.state.editorState, prefix, value),
+  )
+
+  setLineHeight = size => this.setBlockComplex('LINEHEIGHT', size)
+  alignBlock = alignment => this.setBlockComplex('ALIGN', alignment.toUpperCase())
 
   render () {
 
@@ -174,7 +141,7 @@ class Overdraft extends Component {
         ref={n => this._editor = n}
         placeholder='Insert content here...'
         editorState={this.state.editorState}
-        onChange={this.edit}
+        onChange={this.editWithoutFocus}
         blockStyleFn={blockStyleFn}
         customStyleFn={customStyleFn}
       />
