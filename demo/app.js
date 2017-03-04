@@ -9,7 +9,7 @@ import Usage from './Usage'
 class App extends Component {
 
   state = {
-    value: '<h1 style="text-align: right">Title level 1</h1><p>Bacon <u>ipsum</u> dolor amet frankfurter bresaola corned <b>beef</b> shank andouille pig filet mignon pork belly kielbasa short ribs hamburger meatball pork loin beef chicken. Sirloin chuck picanha, ham hock capicola beef cow biltong.</p><ol><li>First list item</li><li>Second list item</li><li><span style="color:white;"><span style="background-color:#f16b6b;">Third</span></span> list item</li></ol>',
+    value: '<p>abc</p><p>def</p><p>ghi</p>',
     selection: {},
     showOutput: false,
   }

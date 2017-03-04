@@ -1,9 +1,4 @@
 import {
-  OrderedMap,
-  List,
-} from 'immutable'
-
-import {
   EditorState,
   SelectionState,
 } from 'draft-js'
@@ -15,86 +10,75 @@ export default function handlePaste (editorState, pastedContent) {
   const selectionState = editorState.getSelection()
   const s = getSelectionKeys(selectionState)
   const pastedBlocks = pastedContent.getBlockMap()
+  const rawLastPasted = pastedBlocks.last()
 
   let currentContent = editorState.getCurrentContent()
   const currentBlocks = currentContent.getBlockMap()
 
-  let foundStart = false
-  let foundEnd = false
-  let finalSelectionOffset
-  let finalSelectionBlock
+  const beforeBlocks = currentBlocks
+    .takeUntil(b => b.get('key') === s.anchor)
 
-  const newBlocks = currentBlocks.reduce((blocks, block, key) => {
+  const afterBlocks = currentBlocks
+    .skipUntil(b => b.get('key') === s.focus)
+    .slice(1)
 
-    if (key === s.anchor) {
-      const firstPastedBlock = pastedBlocks.first()
-      if (key === s.focus) {
-        finalSelectionOffset = s.startOffset + firstPastedBlock.getText().length
-        finalSelectionBlock = pastedBlocks.last().get('key')
-        foundEnd = true
-      }
-      foundStart = true
-      const meltedFirstBlock = block
-        .set('type', firstPastedBlock.get('type'))
-        .set('text', [
-          block.getText().substr(0, s.startOffset),
-          firstPastedBlock.getText(),
-          foundEnd ? block.getText().substr(s.endOffset) : '',
-        ].join(''))
-        .set(
-          'characterList',
-          block.getCharacterList()
-            .slice(0, s.startOffset)
-            .concat(firstPastedBlock.getCharacterList())
-            .concat(foundEnd ? block.getCharacterList().slice(s.endOffset) : List())
-        )
+  const blockAnchor = currentBlocks.get(s.anchor)
+  const blockFocus = currentBlocks.get(s.focus)
 
-      const finalBlocks = OrderedMap()
-        .set(block.get('key'), meltedFirstBlock)
-        .concat(pastedBlocks.skip(1))
+  const firstPasted = pastedBlocks.first()
+  const firstPastedType = firstPasted.get('type')
 
-      blocks = blocks.concat(finalBlocks)
-      return blocks
-    }
+  let finalBlocks = beforeBlocks
 
-    if (key === s.focus) {
-      foundEnd = true
-      const lastPastedBlock = pastedBlocks.last()
-      const lastBlock = blocks.last()
-      const meltedLastBlock = lastBlock
-        .set('type', lastPastedBlock.get('type'))
-        .set('text', [
-          lastBlock.getText(),
-          block.getText().substr(s.endOffset),
-        ].join(''))
-        .set(
-          'characterList',
-          lastBlock.getCharacterList()
-            .concat(block.getCharacterList().slice(s.endOffset))
-        )
+  let meltedStart = blockAnchor
+    .set('text', [
+      blockAnchor.getText().substr(0, s.startOffset),
+      firstPasted.getText(),
+    ].join(''))
+    .set('characterList', blockAnchor
+      .get('characterList')
+      .slice(0, s.startOffset)
+      .concat(firstPasted.get('characterList'))
+    )
 
-      finalSelectionBlock = lastBlock.get('key')
-      finalSelectionOffset = s.startOffset + lastPastedBlock.getText().length
-      blocks = blocks.set(lastBlock.get('key'), meltedLastBlock)
-      return blocks
-    }
+  if (firstPastedType !== 'unstyled') {
+    meltedStart = meltedStart.set('type', firstPastedType)
+  }
 
-    // push all blocks before and after selection
-    if (!foundStart || foundEnd) {
-      blocks = blocks.set(key, block)
-    }
+  finalBlocks = finalBlocks.set(meltedStart.key, meltedStart)
+  finalBlocks = finalBlocks.concat(pastedBlocks.slice(1))
 
-    return blocks
+  const lastPasted = finalBlocks.last()
+  const lastPastedType = lastPasted.get('type')
 
-  }, OrderedMap())
+  let meltedLast = lastPasted
+    .set('text', [
+      lastPasted.getText(),
+      blockFocus.getText().substr(s.endOffset),
+    ].join(''))
+    .set('characterList', lastPasted
+      .get('characterList')
+      .concat(blockFocus.get('characterList').slice(s.endOffset))
+    )
 
-  currentContent = currentContent.set('blockMap', newBlocks)
+  if (lastPastedType !== 'unstyled') {
+    meltedLast = meltedLast.set('type', lastPastedType)
+  }
+
+  finalBlocks = finalBlocks.set(lastPasted.key, meltedLast)
+  finalBlocks = finalBlocks.concat(afterBlocks)
+
+  currentContent = currentContent.set('blockMap', finalBlocks)
 
   editorState = EditorState.createWithContent(currentContent)
 
+  const offset = pastedBlocks.size > 1
+    ? rawLastPasted.getText().length
+    : s.endOffset + rawLastPasted.getText().length
+
   const finalSelection = SelectionState
-    .createEmpty(finalSelectionBlock)
-    .merge({ anchorOffset: finalSelectionOffset, focusOffset: finalSelectionOffset })
+    .createEmpty(lastPasted.key)
+    .merge({ anchorOffset: offset, focusOffset: offset })
 
   editorState = EditorState.forceSelection(editorState, finalSelection)
 
