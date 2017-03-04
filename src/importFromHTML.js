@@ -20,6 +20,18 @@ const options = {
     const textBg = getHexColor(node.style.backgroundColor)
     if (textBg) { currentStyle = currentStyle.add(`BG_${textBg}`) }
 
+    // text-decoration can have multiple values
+    // draft-js don't handle them by default
+    const textDecoration = node.style.textDecoration
+    if (textDecoration) {
+      const decorations = textDecoration.split(' ')
+      if (decorations.length > 1) {
+        decorations.forEach(deco => {
+          if (deco === 'underline') { currentStyle = currentStyle.add('UNDERLINE') }
+          if (deco === 'line-through') { currentStyle = currentStyle.add('STRIKETHROUGH') }
+        })
+      }
+    }
     return currentStyle
 
   },
