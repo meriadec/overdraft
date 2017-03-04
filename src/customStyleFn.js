@@ -5,7 +5,10 @@ export default function customStyleFn (style) {
       styles.color = styleName.split('COLOR_')[1]
     }
     if (styleName.startsWith('BG_')) {
-      styles.backgroundColor = styleName.split('BG_')[1]
+      const value = styleName.split('BG_')[1]
+      if (value !== 'transparent') {
+        styles.backgroundColor = value
+      }
     }
     if (styleName.startsWith('FONTSIZE_')) {
       styles.fontSize = Number(styleName.split('FONTSIZE_')[1])

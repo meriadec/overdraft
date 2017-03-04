@@ -89,6 +89,27 @@ class Overdraft extends Component {
     }
   }, 25)
 
+  handlePastedText = (text, html) => {
+    if (!html) { return false }
+
+    let { editorState } = this.state
+
+    const selectionState = editorState.getSelection()
+
+    const pastedContent = importFromHTML(html)
+    let currentContent = editorState.getCurrentContent()
+    const blockMap = currentContent.getBlockMap()
+
+    currentContent = currentContent.set('blockMap', blockMap.concat(pastedContent.get('blockMap')))
+
+    editorState = EditorState.createWithContent(currentContent)
+    editorState = EditorState.forceSelection(editorState, selectionState)
+
+    this.edit(editorState)
+
+    return true
+  }
+
   // -- RICH TEXT EDITING --
 
   toggleInline = styleName => this.edit(RichUtils.toggleInlineStyle(this.state.editorState, styleName), false)
@@ -144,6 +165,7 @@ class Overdraft extends Component {
         onChange={this.editWithoutFocus}
         blockStyleFn={blockStyleFn}
         customStyleFn={customStyleFn}
+        handlePastedText={this.handlePastedText}
       />
     ) : (
       <div
