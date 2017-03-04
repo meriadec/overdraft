@@ -1,10 +1,9 @@
 function getBlockAlignment (block) {
   let style = 'ALIGN_LEFT'
-  block.findStyleRanges(e => {
-    if (e.hasStyle('ALIGN_CENTER')) { style = 'ALIGN_CENTER' }
-    if (e.hasStyle('ALIGN_RIGHT')) { style = 'ALIGN_RIGHT' }
-    if (e.hasStyle('ALIGN_JUSTIFY')) { style = 'ALIGN_JUSTIFY' }
-  })
+  const textAlign = block.getIn(['data', 'textAlign'])
+  if (textAlign) {
+    style = `ALIGN_${textAlign.toUpperCase()}`
+  }
   return style
 }
 

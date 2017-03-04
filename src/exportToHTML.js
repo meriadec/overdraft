@@ -15,18 +15,20 @@ const blockRenderMap = DefaultDraftBlockRenderMap.merge(Map({
 const options = {
   blockToHTML: (block) => {
     const style = {}
-    const align = block.inlineStyleRanges.find(s => s.style.startsWith('ALIGN_'))
-    const lineHeight = block.inlineStyleRanges.find(s => s.style.startsWith('LINEHEIGHT_'))
-    if (align) {
-      const alignVal = align.style.split('_')[1].toLowerCase()
-      if (alignVal !== 'left') {
-        style.textAlign = alignVal
-      }
+
+    const {
+      textAlign,
+      lineHeight,
+    } = block.data
+
+    if (textAlign && textAlign !== 'left') {
+      style.textAlign = textAlign
     }
+
     if (lineHeight) {
-      const lineHeightVal = lineHeight.style.split('_')[1].toLowerCase()
-      style.lineHeight = `${lineHeightVal}px`
+      style.lineHeight = lineHeight
     }
+
     if (block.type === 'ordered-list-item') {
       return {
         element: <li />,
@@ -38,8 +40,10 @@ const options = {
         nest: <ul style={style} />,
       }
     }
+
     const tag = blockRenderMap.get(block.type).element
     return React.createElement(tag, { style })
+
   },
   styleToHTML: (style) => {
     if (style.startsWith('COLOR_')) {

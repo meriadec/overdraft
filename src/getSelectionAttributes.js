@@ -3,6 +3,8 @@ import {
   RichUtils,
 } from 'draft-js'
 
+import getSelectionKeys from './getSelectionKeys'
+
 /**
  * Returns a friendly-usable recap of current selected styles,
  * eventually re-using the given selection attributes map
@@ -15,20 +17,32 @@ export default function getSelectionAttributes (state, previous = null) {
 
   if (!previous) { previous = Map() }
 
+  const s = getSelectionKeys(state.getSelection())
+
+  const blockData = state
+    .getCurrentContent()
+    .getIn(['blockMap', s.anchor, 'data'], null)
+
+  let textAlign = 'left'
+
+  if (blockData) {
+    textAlign = blockData.get('textAlign')
+  }
+
   const blockType = RichUtils.getCurrentBlockType(state)
   const styles = state.getCurrentInlineStyle()
 
-  const s = {
+  const attrs = {
     isH1: blockType === 'header-one',
     isH2: blockType === 'header-two',
     isH3: blockType === 'header-three',
     isP: blockType === 'unstyled',
     isListUnordered: blockType === 'unordered-list-item',
     isListOrdered: blockType === 'ordered-list-item',
-    isTextLeft: styles.includes('ALIGN_LEFT'),
-    isTextCenter: styles.includes('ALIGN_CENTER'),
-    isTextRight: styles.includes('ALIGN_RIGHT'),
-    isTextJustify: styles.includes('ALIGN_JUSTIFY'),
+    isTextLeft: textAlign === 'left',
+    isTextCenter: textAlign === 'center',
+    isTextRight: textAlign === 'right',
+    isTextJustify: textAlign === 'justify',
     isBold: styles.includes('BOLD'),
     isItalic: styles.includes('ITALIC'),
     isLinethrough: styles.includes('STRIKETHROUGH'),
@@ -63,10 +77,10 @@ export default function getSelectionAttributes (state, previous = null) {
     }, 'transparent'),
   }
 
-  if (!s.isTextCenter && !s.isTextRight && !s.isTextJustify) {
-    s.isTextLeft = true
+  if (!attrs.isTextCenter && !attrs.isTextRight && !attrs.isTextJustify) {
+    attrs.isTextLeft = true
   }
 
-  return previous.merge(s)
+  return previous.merge(attrs)
 
 }

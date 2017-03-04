@@ -1,5 +1,13 @@
 import { convertFromHTML } from 'draft-convert'
 
+const blocksTags = {
+  h1: 'header-one',
+  h2: 'header-two',
+  h3: 'header-three',
+  p: 'unstyled',
+  div: 'unstyled',
+}
+
 const options = {
 
   htmlToStyle: (nodeName, node, currentStyle) => {
@@ -14,6 +22,22 @@ const options = {
 
     return currentStyle
 
+  },
+
+  htmlToBlock: (nodeName, node) => {
+    const blockType = blocksTags[nodeName]
+    if (blockType) {
+      const data = {}
+      if (node.style) {
+        if (node.style.textAlign) {
+          data.textAlign = node.style.textAlign
+        }
+      }
+      return {
+        type: blockType,
+        data,
+      }
+    }
   },
 
 }

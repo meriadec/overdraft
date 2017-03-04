@@ -144,8 +144,8 @@ class Overdraft extends Component {
     setBlockComplex(this.state.editorState, prefix, value),
   )
 
-  setLineHeight = size => this.setBlockComplex('LINEHEIGHT', size)
-  alignBlock = alignment => this.setBlockComplex('ALIGN', alignment.toUpperCase())
+  setLineHeight = size => this.setBlockComplex('lineHeight', `${size}px`)
+  alignBlock = alignment => this.setBlockComplex('textAlign', alignment)
 
   render () {
 
