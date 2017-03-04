@@ -14,6 +14,7 @@ import customStyleFn from './customStyleFn'
 import getSelectionAttributes from './getSelectionAttributes'
 import removeComplex from './removeComplex'
 import setBlockComplex from './setBlockComplex'
+import handlePaste from './handlePaste'
 
 class Overdraft extends Component {
 
@@ -92,20 +93,11 @@ class Overdraft extends Component {
   handlePastedText = (text, html) => {
     if (!html) { return false }
 
-    let { editorState } = this.state
-
-    const selectionState = editorState.getSelection()
+    const { editorState } = this.state
 
     const pastedContent = importFromHTML(html)
-    let currentContent = editorState.getCurrentContent()
-    const blockMap = currentContent.getBlockMap()
 
-    currentContent = currentContent.set('blockMap', blockMap.concat(pastedContent.get('blockMap')))
-
-    editorState = EditorState.createWithContent(currentContent)
-    editorState = EditorState.forceSelection(editorState, selectionState)
-
-    this.edit(editorState)
+    this.edit(handlePaste(editorState, pastedContent))
 
     return true
   }

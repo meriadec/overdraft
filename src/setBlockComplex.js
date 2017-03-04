@@ -1,11 +1,8 @@
 import {
-  Modifier,
   EditorState,
-  SelectionState,
 } from 'draft-js'
 
 import getSelectionKeys from './getSelectionKeys'
-import removeComplex from './removeComplex'
 
 export default function setBlockComplex (editorState, prop, value) {
 
