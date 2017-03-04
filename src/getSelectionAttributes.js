@@ -24,9 +24,12 @@ export default function getSelectionAttributes (state, previous = null) {
     .getIn(['blockMap', s.anchor, 'data'], null)
 
   let textAlign = 'left'
+  let lineHeight = null
 
   if (blockData) {
     textAlign = blockData.get('textAlign')
+    lineHeight = parseInt(blockData.get('lineHeight'), 10)
+    if (Number.isNaN(lineHeight)) { lineHeight = null }
   }
 
   const blockType = RichUtils.getCurrentBlockType(state)
@@ -55,12 +58,7 @@ export default function getSelectionAttributes (state, previous = null) {
       return fontSize
     }, null),
 
-    lineHeight: styles.reduce((fontSize, name) => {
-      if (name.startsWith('LINEHEIGHT_')) {
-        return name.split('LINEHEIGHT_')[1]
-      }
-      return fontSize
-    }, null),
+    lineHeight,
 
     textColor: styles.reduce((color, name) => {
       if (name.startsWith('COLOR_')) {
