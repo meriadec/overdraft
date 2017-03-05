@@ -5,6 +5,20 @@ import {
 
 import getSelectionKeys from './getSelectionKeys'
 
+function getLinkHrefAtOffset (contentState, block, offset, tryBefore = true) {
+  const linkEntityKey = block.getEntityAt(offset)
+  if (linkEntityKey) {
+    const linkEntity = contentState.getEntity(linkEntityKey)
+    return linkEntity.getData().href
+  }
+  // here, we also check for the precedent characted,
+  // because we want the link to be detected if the
+  // cursor is at the end of the link
+  return tryBefore
+    ? getLinkHrefAtOffset(contentState, block, offset - 1, false)
+    : null
+}
+
 /**
  * Returns a friendly-usable recap of current selected styles,
  * eventually re-using the given selection attributes map
@@ -34,13 +48,8 @@ export default function getSelectionAttributes (editorState, previous = null) {
     if (Number.isNaN(lineHeight)) { lineHeight = null }
   }
 
-  let link = null
   const currentBlock = contentState.getBlockForKey(s.anchor)
-  const linkEntityKey = currentBlock.getEntityAt(s.startOffset)
-  if (linkEntityKey) {
-    const linkEntity = contentState.getEntity(linkEntityKey)
-    link = linkEntity.getData().href
-  }
+  const link = getLinkHrefAtOffset(contentState, currentBlock, s.startOffset)
 
   const blockType = RichUtils.getCurrentBlockType(editorState)
   const styles = editorState.getCurrentInlineStyle()

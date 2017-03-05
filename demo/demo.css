@@ -1,7 +1,4 @@
 * {
-  user-select: none;
-  -webkit-user-select: none;
-  cursor: default;
   box-sizing: border-box;
 }
 
@@ -18,12 +15,6 @@ a {
   position: relative;
 }
 
-.select-text, .select-text * {
-  user-select: text;
-  -webkit-user-select: text;
-  cursor: text;
-}
-
 h1 > code {
   margin-left: 15px;
   font-size: 12px;
@@ -36,6 +27,10 @@ h1 > code {
   position: absolute;
   right: 0; top: 100%;
   font-size: 12px;
+}
+
+[contenteditable] a {
+  cursor: text;
 }
 
 .flex-center {

@@ -122,7 +122,7 @@ class App extends Component {
           <div className='demo-overdraft-controls-row'>
             <div className='demo-overdraft-controls-group'>
               <Control
-                label='B'
+                label={<span style={{ fontWeight: 'bold' }}>{'B'}</span>}
                 active={selection.isBold}
                 onPress={() => this.editor.setBold()}
               />

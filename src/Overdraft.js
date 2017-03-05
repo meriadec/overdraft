@@ -141,9 +141,7 @@ class Overdraft extends Component {
   removeLink = () => {
     const { editorState } = this.state
     const selection = editorState.getSelection()
-    if (!selection.isCollapsed()) {
-      this.edit(RichUtils.toggleLink(editorState, selection, null))
-    }
+    this.edit(RichUtils.toggleLink(editorState, selection, null))
   }
 
   render () {

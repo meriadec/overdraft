@@ -1,8 +1,8 @@
 import {
-  ContentState,
   EditorState,
 } from 'draft-js'
 
+import createDecorator from './createDecorator'
 import getSelectionKeys from './getSelectionKeys'
 
 export default function removeComplex (editorState, selectionState, prefix) {
@@ -12,11 +12,11 @@ export default function removeComplex (editorState, selectionState, prefix) {
   const start = selectionState.getStartOffset()
   const end = selectionState.getEndOffset()
 
-  const currentContent = editorState.getCurrentContent()
+  let contentState = editorState.getCurrentContent()
 
   // retrieve all blocks that we have selected
   let found = false
-  const currentBlocks = currentContent.getBlockMap()
+  const currentBlocks = contentState.getBlockMap()
   const blocks = currentBlocks
     .skipUntil((v, k) => k === s.anchor)
     .takeUntil((v, k) => {
@@ -36,9 +36,9 @@ export default function removeComplex (editorState, selectionState, prefix) {
     })
 
   const newBlocks = currentBlocks.merge(blocks)
-  const newContent = ContentState.createFromBlockArray(newBlocks.toArray())
+  contentState = contentState.set('blockMap', newBlocks)
 
-  editorState = EditorState.createWithContent(newContent)
+  editorState = EditorState.createWithContent(contentState, createDecorator())
   editorState = EditorState.forceSelection(editorState, selectionState)
 
   return editorState

@@ -62,6 +62,12 @@ const options = {
       return <span style={{ fontSize: Number(style.split('FONTSIZE_')[1]) }} />
     }
   },
+  entityToHTML: (entity, originalText) => {
+    if (entity.type === 'LINK') {
+      return <a href={entity.data.href}>{originalText}</a>
+    }
+    return originalText
+  },
 }
 
 /**

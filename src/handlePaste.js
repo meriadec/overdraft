@@ -4,6 +4,7 @@ import {
 } from 'draft-js'
 
 import getSelectionKeys from './getSelectionKeys'
+import createDecorator from './createDecorator'
 
 export default function handlePaste (editorState, pastedContent) {
 
@@ -70,7 +71,7 @@ export default function handlePaste (editorState, pastedContent) {
 
   currentContent = currentContent.set('blockMap', finalBlocks)
 
-  editorState = EditorState.createWithContent(currentContent)
+  editorState = EditorState.createWithContent(currentContent, createDecorator())
 
   const offset = pastedBlocks.size > 1
     ? rawLastPasted.getText().length

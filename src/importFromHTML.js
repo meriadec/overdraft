@@ -1,3 +1,4 @@
+import { Entity } from 'draft-js'
 import { convertFromHTML } from 'draft-convert'
 
 const blocksTags = {
@@ -49,6 +50,12 @@ const options = {
         type: blockType,
         data,
       }
+    }
+  },
+
+  htmlToEntity: (nodeName, node) => {
+    if (nodeName === 'a') {
+      return Entity.create('LINK', 'MUTABLE', { href: node.attributes.href.value })
     }
   },
 

@@ -92,7 +92,7 @@ class PopupControl extends Component {
           onPress={() => this.setState({ isOpened: !isOpened })}
           active={isOpened}
           label={isLink ? (
-            <span style={{ color: (value && !isOpened) ? '#f16b6b' : '#fff' }}>
+            <span style={{ color: (value !== null && !isOpened) ? '#f16b6b' : '#fff' }}>
               {label}
             </span>
           ) : label}
