@@ -9,18 +9,20 @@ import getSelectionKeys from './getSelectionKeys'
  * Returns a friendly-usable recap of current selected styles,
  * eventually re-using the given selection attributes map
  *
- * @param EditorState state
+ * @param EditorState editorState
  * @param Immutable.Map previous
  * @return Immutable.Map
  */
-export default function getSelectionAttributes (state, previous = null) {
+export default function getSelectionAttributes (editorState, previous = null) {
 
   if (!previous) { previous = Map() }
 
-  const s = getSelectionKeys(state.getSelection())
+  const selectionState = editorState.getSelection()
+  const s = getSelectionKeys(selectionState)
 
-  const blockData = state
-    .getCurrentContent()
+  const contentState = editorState.getCurrentContent()
+
+  const blockData = contentState
     .getIn(['blockMap', s.anchor, 'data'], null)
 
   let textAlign = 'left'
@@ -32,8 +34,16 @@ export default function getSelectionAttributes (state, previous = null) {
     if (Number.isNaN(lineHeight)) { lineHeight = null }
   }
 
-  const blockType = RichUtils.getCurrentBlockType(state)
-  const styles = state.getCurrentInlineStyle()
+  let link = null
+  const currentBlock = contentState.getBlockForKey(s.anchor)
+  const linkEntityKey = currentBlock.getEntityAt(s.startOffset)
+  if (linkEntityKey) {
+    const linkEntity = contentState.getEntity(linkEntityKey)
+    link = linkEntity.getData().href
+  }
+
+  const blockType = RichUtils.getCurrentBlockType(editorState)
+  const styles = editorState.getCurrentInlineStyle()
 
   const attrs = {
     isH1: blockType === 'header-one',
@@ -73,6 +83,8 @@ export default function getSelectionAttributes (state, previous = null) {
       }
       return color
     }, 'transparent'),
+
+    link,
   }
 
   if (!attrs.isTextCenter && !attrs.isTextRight && !attrs.isTextJustify) {

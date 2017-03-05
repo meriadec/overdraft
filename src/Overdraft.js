@@ -4,7 +4,6 @@ import {
   Editor,
   EditorState,
   RichUtils,
-  SelectionState,
 } from 'draft-js'
 
 import importFromHTML from './importFromHTML'
@@ -15,6 +14,7 @@ import getSelectionAttributes from './getSelectionAttributes'
 import removeComplex from './removeComplex'
 import setBlockComplex from './setBlockComplex'
 import handlePaste from './handlePaste'
+import createDecorator from './createDecorator'
 
 class Overdraft extends Component {
 
@@ -43,7 +43,8 @@ class Overdraft extends Component {
 
   loadHTML = value => {
     const contentState = importFromHTML(value)
-    let editorState = EditorState.createWithContent(contentState)
+    const decorator = createDecorator()
+    let editorState = EditorState.createWithContent(contentState, decorator)
     editorState = this.focusEnd(editorState)
     this.setState({ editorState })
     this.batchSelectionChange(editorState)
@@ -103,8 +104,6 @@ class Overdraft extends Component {
 
   setBlockType = blockType => this.edit(RichUtils.toggleBlockType(this.state.editorState, blockType), false)
 
-  setFontSize = (size) => this.setComplex('FONTSIZE', size)
-
   setComplex = (prefix, value) => {
 
     let { editorState } = this.state
@@ -117,6 +116,7 @@ class Overdraft extends Component {
     this.edit(RichUtils.toggleInlineStyle(editorState, `${prefix}_${value}`))
   }
 
+  setFontSize = (size) => this.setComplex('FONTSIZE', size)
   setTextColor = color => this.setComplex('COLOR', color, true)
   setTextBg = color => this.setComplex('BG', color, true)
   removeTextColor = () => this.setComplex('COLOR', null, true)
@@ -128,6 +128,23 @@ class Overdraft extends Component {
 
   setLineHeight = size => this.setBlockComplex('lineHeight', `${size}px`)
   alignBlock = alignment => this.setBlockComplex('textAlign', alignment)
+
+  applyLink = href => {
+    let { editorState } = this.state
+    const contentState = editorState.getCurrentContent()
+    const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', { href })
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey()
+    editorState = EditorState.set(editorState, { currentContent: contentStateWithEntity })
+    this.edit(RichUtils.toggleLink(editorState, editorState.getSelection(), entityKey))
+  }
+
+  removeLink = () => {
+    const { editorState } = this.state
+    const selection = editorState.getSelection()
+    if (!selection.isCollapsed()) {
+      this.edit(RichUtils.toggleLink(editorState, selection, null))
+    }
+  }
 
   render () {
 

@@ -165,7 +165,7 @@ class App extends Component {
                 onRemove={() => this.editor.removeTextColor()}
                 label={(
                   <span className='flex-center'>
-                    {'Text color'}
+                    {'Color'}
                     <span className='color' style={{ backgroundColor: selection.textColor }} />
                   </span>
                 )}
@@ -177,10 +177,19 @@ class App extends Component {
                 onRemove={() => this.editor.removeTextBg()}
                 label={(
                   <span className='flex-center'>
-                    {'Text background'}
+                    {'Background'}
                     <span className='color' style={{ backgroundColor: selection.textBg }} />
                   </span>
                 )}
+              />
+            </div>
+            <div className='demo-overdraft-controls-group'>
+              <PopupControl
+                isLink
+                value={selection.link}
+                onChange={href => this.editor.applyLink(href)}
+                onRemove={() => this.editor.removeLink()}
+                label='Link'
               />
             </div>
           </div>
