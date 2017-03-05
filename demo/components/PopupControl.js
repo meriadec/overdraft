@@ -18,14 +18,14 @@ class PopupControl extends Component {
 
   componentDidUpdate (prevProps, prevState) {
     if (this.state.isOpened && !prevState.isOpened) {
-      document.addEventListener('click', this.closeOutside)
+      document.addEventListener('mousedown', this.closeOutside)
     } else if (!this.state.isOpened && prevState.isOpened) {
-      document.removeEventListener('click', this.closeOutside)
+      document.removeEventListener('mousedown', this.closeOutside)
     }
   }
 
   componentWillUnmount () {
-    document.removeEventListener('click', this.closeOutside)
+    document.removeEventListener('mousedown', this.closeOutside)
   }
 
   closeOutside = e => {

@@ -63,8 +63,10 @@ h1 > code {
 .demo-overdraft-control {
   padding: 0 8px;
   line-height: 30px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  font-weight: bold;
+  /* border: 2px solid rgba(0, 0, 0, 0.2); */
+  border: none;
+  background: #444;
+  color: #fff;
 }
 
 .demo-overdraft-control.active {
@@ -73,7 +75,7 @@ h1 > code {
 }
 
 .demo-overdraft-controls {
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
 .demo-overdraft-controls-row {
@@ -82,7 +84,7 @@ h1 > code {
 }
 
 .demo-overdraft-controls-row + .demo-overdraft-controls-row {
-  margin-top: 3px;
+  margin-top: 8px;
 }
 
 .demo-overdraft-controls-group {
@@ -91,7 +93,7 @@ h1 > code {
 }
 
 .demo-overdraft-controls-group + .demo-overdraft-controls-group {
-  margin-left: 3px;
+  margin-left: 8px;
 }
 
 .PopupControl {

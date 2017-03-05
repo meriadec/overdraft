@@ -9,9 +9,10 @@ import Usage from './Usage'
 class App extends Component {
 
   state = {
-    value: '<h1 style="text-align: right">Title level 1</h1><p>Bacon <u>ipsum</u> dolor amet frankfurter bresaola corned <b>beef</b> shank andouille pig filet mignon pork belly kielbasa short ribs hamburger meatball pork loin beef chicken. Sirloin chuck picanha, ham hock capicola beef cow biltong.</p><ol><li>First list item</li><li>Second list item</li><li><span style="color:white;"><span style="background-color:#f16b6b;">Third</span></span> list item</li></ol>',
+    value: '<h1 style="text-align: right;color:#52C4C0">Title level 1</h1><p>Bacon <u>ipsum</u> dolor amet frankfurter bresaola corned <b>beef</b> shank andouille pig filet mignon pork belly kielbasa short ribs <u><b><em>hamburger <span style="text-decoration:line-through;">meatball</span></em></b></u> pork loin beef chicken. Sirloin chuck picanha, ham hock capicola beef cow biltong.</p><ol><li>First list item</li><li>Second list item</li><li><span style="color:white;"><span style="background-color:#f16b6b;">Third</span></span> list item</li></ol>',
     selection: {},
     showOutput: false,
+    showResult: false,
   }
 
   componentDidMount () {
@@ -23,12 +24,18 @@ class App extends Component {
     this.setState({ showOutput: !this.state.showOutput })
   }
 
+  toggleResult = e => {
+    e.preventDefault()
+    this.setState({ showResult: !this.state.showResult })
+  }
+
   render () {
 
     const {
       value,
       selection,
       showOutput,
+      showResult,
     } = this.state
 
     return (
@@ -75,8 +82,6 @@ class App extends Component {
                 active={selection.isP}
                 onPress={() => this.editor.setBlockType('unstyled')}
               />
-            </div>
-            <div className='demo-overdraft-controls-group'>
               <Control
                 active={selection.isListUnordered}
                 onPress={() => this.editor.setBlockType('unordered-list-item')}
@@ -88,8 +93,6 @@ class App extends Component {
                 label='OL'
               />
             </div>
-          </div>
-          <div className='demo-overdraft-controls-row'>
             <div className='demo-overdraft-controls-group'>
               <Control
                 active={selection.isTextLeft}
@@ -141,6 +144,8 @@ class App extends Component {
                 style={{ textDecoration: 'underline' }}
                 label='U'
               />
+            </div>
+            <div className='demo-overdraft-controls-group'>
               <PopupControl
                 isNumber
                 value={selection.fontSize}
@@ -201,6 +206,19 @@ class App extends Component {
 
         {showOutput && (
           <pre className='select-text'>{value}</pre>
+        )}
+
+        <div style={{ marginTop: 10 }}>
+          <a href='' onClick={this.toggleResult}>
+            {`${showResult ? 'Hide' : 'Show'} result`}
+          </a>
+          <span className='arrow'>
+            {!showResult ? ' ▶' : ' ▼'}
+          </span>
+        </div>
+
+        {showResult && (
+          <div dangerouslySetInnerHTML={{ __html: value }} />
         )}
 
         <Usage />
