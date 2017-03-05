@@ -218,7 +218,7 @@ class App extends Component {
         </div>
 
         {showResult && (
-          <div dangerouslySetInnerHTML={{ __html: value }} />
+          <div className='select-text' dangerouslySetInnerHTML={{ __html: value }} />
         )}
 
         <Usage />
