@@ -49,17 +49,7 @@ class Overdraft extends Component {
     this.batchSelectionChange(editorState)
   }
 
-  focusEnd = editorState => {
-    const contentState = editorState.getCurrentContent()
-    const blockMap = contentState.getBlockMap()
-    const lastBlockKey = blockMap.findLastKey(() => true)
-    const lastBlock = blockMap.last()
-    const lastBlockLength = lastBlock.getText().length
-    const selectionState = SelectionState
-      .createEmpty(lastBlockKey)
-      .merge({ anchorOffset: lastBlockLength, focusOffset: lastBlockLength })
-    return EditorState.forceSelection(editorState, selectionState)
-  }
+  focusEnd = editorState => EditorState.moveFocusToEnd(editorState)
 
   focus = () => this._editor.focus()
 
