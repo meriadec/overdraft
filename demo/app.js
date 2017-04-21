@@ -6,6 +6,8 @@ import Control from './components/Control'
 import PopupControl from './components/PopupControl'
 import Usage from './Usage'
 
+const isProd = process.env.NODE_ENV === 'production'
+
 class App extends Component {
 
   state = {
@@ -39,25 +41,27 @@ class App extends Component {
     } = this.state
 
     return (
-      <div className='demo-container'>
+      <div className={isProd ? 'demo-container' : undefined}>
 
-        <h1 className='flex-center demo-heading'>
-          <div className='relative'>
-            <span style={{ textDecoration: 'line-through' }}>{'o'}</span>
-            {'ver'}
-            <span style={{ fontStyle: 'italic' }}>{'draft'}</span>
-            <span className='version'>{__VERSION__}</span>
-          </div>
-          <code className='select-text'>{'npm i overdraft'}</code>
-          <a
-            style={{ marginLeft: 'auto', fontSize: 16 }}
-            target='_blank'
-            rel='noopener noreferrer'
-            href='https://github.com/meriadec/overdraft'
-          >
-            {'See on GitHub'}
-          </a>
-        </h1>
+        {isProd && (
+          <h1 className='flex-center demo-heading'>
+            <div className='relative'>
+              <span style={{ textDecoration: 'line-through' }}>{'o'}</span>
+              {'ver'}
+              <span style={{ fontStyle: 'italic' }}>{'draft'}</span>
+              <span className='version'>{__VERSION__}</span>
+            </div>
+            <code className='select-text'>{'npm i overdraft'}</code>
+            <a
+              style={{ marginLeft: 'auto', fontSize: 16 }}
+              target='_blank'
+              rel='noopener noreferrer'
+              href='https://github.com/meriadec/overdraft'
+            >
+              {'See on GitHub'}
+            </a>
+          </h1>
+        )}
 
         <div className='demo-overdraft-controls'>
           <div className='demo-overdraft-controls-row'>
@@ -230,7 +234,7 @@ class App extends Component {
           <div className='select-text' dangerouslySetInnerHTML={{ __html: value }} />
         )}
 
-        <Usage />
+        {isProd && <Usage />}
 
       </div>
     )
