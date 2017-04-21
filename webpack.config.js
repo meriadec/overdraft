@@ -13,11 +13,13 @@ const config = {
     filename: 'bundle.js',
   },
   module: {
-    loaders: [{
-      test: /\.js$/,
-      exclude: /node_modules/,
-      loaders: ['babel'],
-    }],
+    rules: [
+      {
+        test: /\.js$/,
+        loader: 'babel-loader',
+        exclude: /node_modules/,
+      },
+    ],
   },
   plugins: [
     new webpack.DefinePlugin({
