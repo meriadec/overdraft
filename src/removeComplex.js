@@ -39,7 +39,7 @@ export default function removeComplex (editorState, selectionState, prefix) {
   contentState = contentState.set('blockMap', newBlocks)
 
   editorState = EditorState.createWithContent(contentState, createDecorator())
-  editorState = EditorState.forceSelection(editorState, selectionState)
+  editorState = EditorState.acceptSelection(editorState, selectionState)
 
   return editorState
 

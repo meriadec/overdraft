@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { ChromePicker } from 'react-color'
 
 import Control from './Control'
+import Input from './Input'
 
 class PopupControl extends Component {
 
@@ -101,20 +102,19 @@ class PopupControl extends Component {
           <div className='PopupControl--popup'>
             {isNumber ? (
               <div className='flex-center'>
-                <input
-                  ref={n => this._input = n}
+                <Input
                   type='number'
                   autoFocus
-                  defaultValue={value}
+                  value={value || 8}
                   min={8}
                   max={100}
                   step={1}
-                  onKeyDown={this.handleKeyDown}
+                  onChange={v => this.props.onChange(Number(v))}
                 />
                 <button
                   className='demo-overdraft-control'
                   style={{ marginLeft: 5 }}
-                  onClick={this.handleValidate}
+                  onClick={this.close}
                 >
                   {'OK'}
                 </button>

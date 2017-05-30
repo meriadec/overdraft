@@ -24,7 +24,7 @@ export default function setBlockComplex (editorState, prop, value) {
   currentContent = currentContent.set('blockMap', currentBlocks.merge(blocks))
 
   editorState = EditorState.createWithContent(currentContent, createDecorator())
-  editorState = EditorState.forceSelection(editorState, backupSelection)
+  editorState = EditorState.acceptSelection(editorState, backupSelection)
 
   return editorState
 

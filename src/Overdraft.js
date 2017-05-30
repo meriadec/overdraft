@@ -105,26 +105,30 @@ class Overdraft extends Component {
 
   setBlockType = blockType => this.edit(RichUtils.toggleBlockType(this.state.editorState, blockType), false)
 
-  setComplex = (prefix, value) => {
+  setComplex = (prefix, value, focusAfter = true) => {
 
     let { editorState } = this.state
 
     const selectionState = editorState.getSelection()
     editorState = removeComplex(editorState, selectionState, prefix)
 
-    if (!value) { return this.edit(editorState) }
+    if (!value) { return this.edit(editorState, focusAfter) }
 
-    this.edit(RichUtils.toggleInlineStyle(editorState, `${prefix}_${value}`))
+    this.edit(
+      RichUtils.toggleInlineStyle(editorState, `${prefix}_${value}`),
+      focusAfter,
+    )
   }
 
-  setFontSize = (size) => this.setComplex('FONTSIZE', size)
-  setTextColor = color => this.setComplex('COLOR', color, true)
+  setFontSize = (size) => this.setComplex('FONTSIZE', size, false)
+  setTextColor = color => this.setComplex('COLOR', color, false)
   setTextBg = color => this.setComplex('BG', color, true)
   removeTextColor = () => this.setComplex('COLOR', null, true)
   removeTextBg = () => this.setComplex('BG', null, true)
 
   setBlockComplex = (prefix, value) => this.edit(
     setBlockComplex(this.state.editorState, prefix, value),
+    false,
   )
 
   setLineHeight = size => this.setBlockComplex('lineHeight', `${size}px`)
