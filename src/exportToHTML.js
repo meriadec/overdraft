@@ -64,7 +64,11 @@ const options = {
   },
   entityToHTML: (entity, originalText) => {
     if (entity.type === 'LINK') {
-      return <a href={entity.data.href}>{originalText}</a>
+      const { data } = entity
+      return {
+        start: `<a href="${data.href}">`,
+        end: '</a>'
+      }
     }
     return originalText
   },
