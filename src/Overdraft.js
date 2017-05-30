@@ -166,11 +166,7 @@ class Overdraft extends Component {
         handlePastedText={this.handlePastedText}
       />
     ) : (
-      <div
-        dangerouslySetInnerHTML={{
-          __html: value,
-        }}
-      />
+      <div dangerouslySetInnerHTML={{ __html: value }} />
     )
   }
 
