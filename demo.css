@@ -1,0 +1,153 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  padding: 20px;
+  font-family: serif;
+}
+
+a {
+  cursor: pointer;
+}
+
+.relative {
+  position: relative;
+}
+
+h1 > code {
+  margin-left: 15px;
+  font-size: 12px;
+  background: #eee;
+  color: #f16b6b;
+  padding: 3px;
+}
+
+.version {
+  position: absolute;
+  right: 0; top: 100%;
+  font-size: 12px;
+}
+
+[contenteditable] a {
+  cursor: text;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+}
+
+.demo-heading {
+  margin-bottom: 100px;
+}
+
+.demo-h3 {
+  color: #f16b6b;
+}
+
+.demo-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.demo-overdraft-container {
+  border: 2px dashed lightgrey;
+}
+
+.demo-overdraft-control {
+  padding: 0 8px;
+  line-height: 30px;
+  /* border: 2px solid rgba(0, 0, 0, 0.2); */
+  border: none;
+  background: #444;
+  color: #fff;
+}
+
+.demo-overdraft-control.active {
+  background: #f16b6b;
+  color: white;
+}
+
+.demo-overdraft-controls {
+  margin-bottom: 10px;
+}
+
+.demo-overdraft-controls-row {
+  display: flex;
+  align-items: center;
+}
+
+.demo-overdraft-controls-row + .demo-overdraft-controls-row {
+  margin-top: 8px;
+}
+
+.demo-overdraft-controls-group {
+  display: flex;
+  align-items: center;
+}
+
+.demo-overdraft-controls-group + .demo-overdraft-controls-group {
+  margin-left: 8px;
+}
+
+.PopupControl {
+  position: relative;
+}
+
+.PopupControl .PopupControl--popup {
+  position: absolute;
+  z-index: 2;
+  top: 100%;
+  left: 0;
+  min-width: 100%;
+  background: white;
+  border: 1px solid #f16b6b;
+  margin-top: -1px;
+  padding: 5px;
+}
+
+.color {
+  display: block;
+  margin-left: 5px;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #bbb;
+}
+
+.arrow {
+  color: #777;
+}
+
+pre {
+  background: #eee;
+  white-space: pre-wrap;
+  font-size: 16px;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* copied from src/style.css */
+
+.alignment--ALIGN_LEFT .public-DraftStyleDefault-block {
+  text-align: left;
+}
+
+.alignment--ALIGN_CENTER .public-DraftStyleDefault-block {
+  text-align: center;
+}
+
+.alignment--ALIGN_RIGHT .public-DraftStyleDefault-block {
+  text-align: right;
+}
+
+.alignment--ALIGN_JUSTIFY .public-DraftStyleDefault-block {
+  text-align: justify;
+}
+
+.public-DraftEditor-content .block-unstyled {
+  -webkit-margin-before: 1em;
+  -webkit-margin-after: 1em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+}
