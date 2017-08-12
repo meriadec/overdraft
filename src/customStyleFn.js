@@ -1,4 +1,4 @@
-export default function customStyleFn (style) {
+export default function customStyleFn(style) {
   const styleNames = style.toJS()
   return styleNames.reduce((styles, styleName) => {
     if (styleName.startsWith('COLOR_')) {

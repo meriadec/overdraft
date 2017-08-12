@@ -1,11 +1,9 @@
 import { Map } from 'immutable'
-import {
-  RichUtils,
-} from 'draft-js'
+import { RichUtils } from 'draft-js'
 
 import getSelectionKeys from './getSelectionKeys'
 
-function getLinkHrefAtOffset (contentState, block, offset, tryBefore = true) {
+function getLinkHrefAtOffset(contentState, block, offset, tryBefore = true) {
   const linkEntityKey = block.getEntityAt(offset)
   if (linkEntityKey) {
     const linkEntity = contentState.getEntity(linkEntityKey)
@@ -14,9 +12,7 @@ function getLinkHrefAtOffset (contentState, block, offset, tryBefore = true) {
   // here, we also check for the precedent characted,
   // because we want the link to be detected if the
   // cursor is at the end of the link
-  return tryBefore
-    ? getLinkHrefAtOffset(contentState, block, offset - 1, false)
-    : null
+  return tryBefore ? getLinkHrefAtOffset(contentState, block, offset - 1, false) : null
 }
 
 /**
@@ -27,17 +23,17 @@ function getLinkHrefAtOffset (contentState, block, offset, tryBefore = true) {
  * @param Immutable.Map previous
  * @return Immutable.Map
  */
-export default function getSelectionAttributes (editorState, previous = null) {
-
-  if (!previous) { previous = Map() }
+export default function getSelectionAttributes(editorState, previous = null) {
+  if (!previous) {
+    previous = Map()
+  }
 
   const selectionState = editorState.getSelection()
   const s = getSelectionKeys(selectionState)
 
   const contentState = editorState.getCurrentContent()
 
-  const blockData = contentState
-    .getIn(['blockMap', s.anchor, 'data'], null)
+  const blockData = contentState.getIn(['blockMap', s.anchor, 'data'], null)
 
   let textAlign = 'left'
   let lineHeight = null
@@ -45,7 +41,9 @@ export default function getSelectionAttributes (editorState, previous = null) {
   if (blockData) {
     textAlign = blockData.get('textAlign')
     lineHeight = parseInt(blockData.get('lineHeight'), 10)
-    if (Number.isNaN(lineHeight)) { lineHeight = null }
+    if (Number.isNaN(lineHeight)) {
+      lineHeight = null
+    }
   }
 
   const currentBlock = contentState.getBlockForKey(s.anchor)
@@ -101,5 +99,4 @@ export default function getSelectionAttributes (editorState, previous = null) {
   }
 
   return previous.merge(attrs)
-
 }

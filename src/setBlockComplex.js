@@ -1,12 +1,9 @@
-import {
-  EditorState,
-} from 'draft-js'
+import { EditorState } from 'draft-js'
 
 import getSelectionKeys from './getSelectionKeys'
 import createDecorator from './createDecorator'
 
-export default function setBlockComplex (editorState, prop, value) {
-
+export default function setBlockComplex(editorState, prop, value) {
   const backupSelection = editorState.getSelection()
   const s = getSelectionKeys(backupSelection)
   let currentContent = editorState.getCurrentContent()
@@ -16,8 +13,12 @@ export default function setBlockComplex (editorState, prop, value) {
   const blocks = currentBlocks
     .skipUntil((v, k) => k === s.anchor)
     .takeUntil((v, k) => {
-      if (found) { return true }
-      if (k === s.focus) { found = true }
+      if (found) {
+        return true
+      }
+      if (k === s.focus) {
+        found = true
+      }
     })
     .map(block => block.setIn(['data', prop], value))
 
@@ -27,5 +28,4 @@ export default function setBlockComplex (editorState, prop, value) {
   editorState = EditorState.acceptSelection(editorState, backupSelection)
 
   return editorState
-
 }

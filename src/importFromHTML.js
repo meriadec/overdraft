@@ -10,16 +10,20 @@ const blocksTags = {
 }
 
 const options = {
-
   htmlToStyle: (nodeName, node, currentStyle) => {
-
-    if (node.style === null) { return currentStyle }
+    if (node.style === null) {
+      return currentStyle
+    }
 
     const textColor = getHexColor(node.style.color)
-    if (textColor) { currentStyle = currentStyle.add(`COLOR_${textColor}`) }
+    if (textColor) {
+      currentStyle = currentStyle.add(`COLOR_${textColor}`)
+    }
 
     const textBg = getHexColor(node.style.backgroundColor)
-    if (textBg) { currentStyle = currentStyle.add(`BG_${textBg}`) }
+    if (textBg) {
+      currentStyle = currentStyle.add(`BG_${textBg}`)
+    }
 
     // text-decoration can have multiple values
     // draft-js don't handle them by default
@@ -28,13 +32,16 @@ const options = {
       const decorations = textDecoration.split(' ')
       if (decorations.length > 1) {
         decorations.forEach(deco => {
-          if (deco === 'underline') { currentStyle = currentStyle.add('UNDERLINE') }
-          if (deco === 'line-through') { currentStyle = currentStyle.add('STRIKETHROUGH') }
+          if (deco === 'underline') {
+            currentStyle = currentStyle.add('UNDERLINE')
+          }
+          if (deco === 'line-through') {
+            currentStyle = currentStyle.add('STRIKETHROUGH')
+          }
         })
       }
     }
     return currentStyle
-
   },
 
   htmlToBlock: (nodeName, node) => {
@@ -58,21 +65,28 @@ const options = {
       return Entity.create('LINK', 'MUTABLE', { href: node.attributes.href.value })
     }
   },
-
 }
 
-function toHex (n) {
+function toHex(n) {
   const h = n.toString(16)
   return h.length === 1 ? `0${h}` : h
 }
 
-function getHexColor (c) {
-  if (!c || typeof c !== 'string') { return null }
-  if (c.startsWith('#')) { return c }
-  if (!c.startsWith('rgb')) { return c }
+function getHexColor(c) {
+  if (!c || typeof c !== 'string') {
+    return null
+  }
+  if (c.startsWith('#')) {
+    return c
+  }
+  if (!c.startsWith('rgb')) {
+    return c
+  }
 
-  const r = (/rgba?\(([^)]*)\)/).exec(c)
-  if (!r) { return null }
+  const r = /rgba?\(([^)]*)\)/.exec(c)
+  if (!r) {
+    return null
+  }
   const v = r[1].split(',').map(Number).map(toHex).join('')
   return `#${v}`
 }
@@ -83,6 +97,6 @@ function getHexColor (c) {
  * @param String html
  * @return ContentState
  */
-export default function importFromHTML (html = '') {
+export default function importFromHTML(html = '') {
   return convertFromHTML(options)(html)
 }

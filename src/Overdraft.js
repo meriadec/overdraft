@@ -1,11 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import debounce from 'lodash.debounce'
-import {
-  Editor,
-  EditorState,
-  RichUtils,
-} from 'draft-js'
+import { Editor, EditorState, RichUtils } from 'draft-js'
 
 import importFromHTML from './importFromHTML'
 import exportToHTML from './exportToHTML'
@@ -18,7 +14,6 @@ import handlePaste from './handlePaste'
 import createDecorator from './createDecorator'
 
 class Overdraft extends Component {
-
   static propTypes = {
     value: PropTypes.string.isRequired,
     onChange: PropTypes.func,
@@ -30,13 +25,13 @@ class Overdraft extends Component {
     editorState: null,
   }
 
-  componentWillMount () {
+  componentWillMount() {
     if (!this.props.preventSSR) {
       this.loadHTML(this.props.value)
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     if (this.props.preventSSR) {
       window.requestAnimationFrame(() => this.loadHTML(this.props.value))
     }
@@ -63,7 +58,7 @@ class Overdraft extends Component {
     this.batchOnChange(editorState)
   }
 
-  editWithoutFocus = (editorState) => this.edit(editorState, false)
+  editWithoutFocus = editorState => this.edit(editorState, false)
 
   batchOnChange = debounce(editorState => {
     const content = editorState.getCurrentContent()
@@ -83,7 +78,9 @@ class Overdraft extends Component {
   }, 25)
 
   handlePastedText = (text, html) => {
-    if (!html) { return false }
+    if (!html) {
+      return false
+    }
 
     const { editorState } = this.state
 
@@ -96,40 +93,38 @@ class Overdraft extends Component {
 
   // -- RICH TEXT EDITING --
 
-  toggleInline = styleName => this.edit(RichUtils.toggleInlineStyle(this.state.editorState, styleName), false)
+  toggleInline = styleName =>
+    this.edit(RichUtils.toggleInlineStyle(this.state.editorState, styleName), false)
 
   setBold = () => this.toggleInline('BOLD')
   setItalic = () => this.toggleInline('ITALIC')
   setStrikeThrough = () => this.toggleInline('STRIKETHROUGH')
   setUnderline = () => this.toggleInline('UNDERLINE')
 
-  setBlockType = blockType => this.edit(RichUtils.toggleBlockType(this.state.editorState, blockType), false)
+  setBlockType = blockType =>
+    this.edit(RichUtils.toggleBlockType(this.state.editorState, blockType), false)
 
   setComplex = (prefix, value, focusAfter = true) => {
-
     let { editorState } = this.state
 
     const selectionState = editorState.getSelection()
     editorState = removeComplex(editorState, selectionState, prefix)
 
-    if (!value) { return this.edit(editorState, focusAfter) }
+    if (!value) {
+      return this.edit(editorState, focusAfter)
+    }
 
-    this.edit(
-      RichUtils.toggleInlineStyle(editorState, `${prefix}_${value}`),
-      focusAfter,
-    )
+    this.edit(RichUtils.toggleInlineStyle(editorState, `${prefix}_${value}`), focusAfter)
   }
 
-  setFontSize = (size) => this.setComplex('FONTSIZE', size, false)
+  setFontSize = size => this.setComplex('FONTSIZE', size, false)
   setTextColor = color => this.setComplex('COLOR', color, false)
   setTextBg = color => this.setComplex('BG', color, true)
   removeTextColor = () => this.setComplex('COLOR', null, true)
   removeTextBg = () => this.setComplex('BG', null, true)
 
-  setBlockComplex = (prefix, value) => this.edit(
-    setBlockComplex(this.state.editorState, prefix, value),
-    false,
-  )
+  setBlockComplex = (prefix, value) =>
+    this.edit(setBlockComplex(this.state.editorState, prefix, value), false)
 
   setLineHeight = size => this.setBlockComplex('lineHeight', `${size}px`)
   alignBlock = alignment => this.setBlockComplex('textAlign', alignment)
@@ -149,31 +144,23 @@ class Overdraft extends Component {
     this.edit(RichUtils.toggleLink(editorState, selection, null))
   }
 
-  render () {
+  render() {
+    const { editorState } = this.state
 
-    const {
-      editorState,
-    } = this.state
+    const { value } = this.props
 
-    const {
-      value,
-    } = this.props
-
-    return editorState ? (
-      <Editor
-        ref={n => this._editor = n}
-        placeholder='Insert content here...'
-        editorState={this.state.editorState}
-        onChange={this.editWithoutFocus}
-        blockStyleFn={blockStyleFn}
-        customStyleFn={customStyleFn}
-        handlePastedText={this.handlePastedText}
-      />
-    ) : (
-      <div dangerouslySetInnerHTML={{ __html: value }} />
-    )
+    return editorState
+      ? <Editor
+          ref={n => (this._editor = n)}
+          placeholder="Insert content here..."
+          editorState={this.state.editorState}
+          onChange={this.editWithoutFocus}
+          blockStyleFn={blockStyleFn}
+          customStyleFn={customStyleFn}
+          handlePastedText={this.handlePastedText}
+        />
+      : <div dangerouslySetInnerHTML={{ __html: value }} />
   }
-
 }
 
 export default Overdraft

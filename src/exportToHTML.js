@@ -2,24 +2,21 @@ import React from 'react'
 import { convertToHTML } from 'draft-convert'
 import { Map } from 'immutable'
 
-import {
-  DefaultDraftBlockRenderMap,
-} from 'draft-js'
+import { DefaultDraftBlockRenderMap } from 'draft-js'
 
-const blockRenderMap = DefaultDraftBlockRenderMap.merge(Map({
-  unstyled: {
-    element: 'p',
-  },
-}))
+const blockRenderMap = DefaultDraftBlockRenderMap.merge(
+  Map({
+    unstyled: {
+      element: 'p',
+    },
+  }),
+)
 
 const options = {
-  blockToHTML: (block) => {
+  blockToHTML: block => {
     const style = {}
 
-    const {
-      textAlign,
-      lineHeight,
-    } = block.data
+    const { textAlign, lineHeight } = block.data
 
     if (textAlign && textAlign !== 'left') {
       style.textAlign = textAlign
@@ -43,9 +40,8 @@ const options = {
 
     const tag = blockRenderMap.get(block.type).element
     return React.createElement(tag, { style })
-
   },
-  styleToHTML: (style) => {
+  styleToHTML: style => {
     if (style.startsWith('COLOR_')) {
       return <span style={{ color: style.split('COLOR_')[1] }} />
     }
@@ -67,7 +63,7 @@ const options = {
       const { data } = entity
       return {
         start: `<a href="${data.href}">`,
-        end: '</a>'
+        end: '</a>',
       }
     }
     return originalText
@@ -80,6 +76,6 @@ const options = {
  * @param ContentState content
  * @return String
  */
-export default function exportToHTML (content) {
+export default function exportToHTML(content) {
   return convertToHTML(options)(content)
 }

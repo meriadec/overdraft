@@ -1,16 +1,9 @@
 import React from 'react'
 
-function Link (props) {
+function Link(props) {
+  const { contentState, entityKey, children } = props
 
-  const {
-    contentState,
-    entityKey,
-    children,
-  } = props
-
-  const {
-    href,
-  } = contentState.getEntity(entityKey).getData()
+  const { href } = contentState.getEntity(entityKey).getData()
 
   return (
     <a href={href}>
@@ -21,16 +14,10 @@ function Link (props) {
 
 const linkEntity = {
   strategy: (contentBlock, done, contentState) => {
-    contentBlock.findEntityRanges(
-      (character) => {
-        const entityKey = character.getEntity()
-        return (
-          entityKey !== null
-          && contentState.getEntity(entityKey).getType() === 'LINK'
-        )
-      },
-      done,
-    )
+    contentBlock.findEntityRanges(character => {
+      const entityKey = character.getEntity()
+      return entityKey !== null && contentState.getEntity(entityKey).getType() === 'LINK'
+    }, done)
   },
   component: Link,
 }

@@ -1,4 +1,4 @@
-function getBlockAlignment (block) {
+function getBlockAlignment(block) {
   let style = 'ALIGN_LEFT'
   const textAlign = block.getIn(['data', 'textAlign'])
   if (textAlign) {
@@ -7,6 +7,6 @@ function getBlockAlignment (block) {
   return style
 }
 
-export default function blockStyleFn (block) {
+export default function blockStyleFn(block) {
   return `alignment--${getBlockAlignment(block)} block-${block.get('type')}`
 }

@@ -1,13 +1,9 @@
-import {
-  EditorState,
-  SelectionState,
-} from 'draft-js'
+import { EditorState, SelectionState } from 'draft-js'
 
 import getSelectionKeys from './getSelectionKeys'
 import createDecorator from './createDecorator'
 
-export default function handlePaste (editorState, pastedContent) {
-
+export default function handlePaste(editorState, pastedContent) {
   const selectionState = editorState.getSelection()
   const s = getSelectionKeys(selectionState)
   const pastedBlocks = pastedContent.getBlockMap()
@@ -16,12 +12,9 @@ export default function handlePaste (editorState, pastedContent) {
   let currentContent = editorState.getCurrentContent()
   const currentBlocks = currentContent.getBlockMap()
 
-  const beforeBlocks = currentBlocks
-    .takeUntil(b => b.get('key') === s.anchor)
+  const beforeBlocks = currentBlocks.takeUntil(b => b.get('key') === s.anchor)
 
-  const afterBlocks = currentBlocks
-    .skipUntil(b => b.get('key') === s.focus)
-    .slice(1)
+  const afterBlocks = currentBlocks.skipUntil(b => b.get('key') === s.focus).slice(1)
 
   const blockAnchor = currentBlocks.get(s.anchor)
   const blockFocus = currentBlocks.get(s.focus)
@@ -32,14 +25,13 @@ export default function handlePaste (editorState, pastedContent) {
   let finalBlocks = beforeBlocks
 
   let meltedStart = blockAnchor
-    .set('text', [
-      blockAnchor.getText().substr(0, s.startOffset),
-      firstPasted.getText(),
-    ].join(''))
-    .set('characterList', blockAnchor
-      .get('characterList')
-      .slice(0, s.startOffset)
-      .concat(firstPasted.get('characterList'))
+    .set('text', [blockAnchor.getText().substr(0, s.startOffset), firstPasted.getText()].join(''))
+    .set(
+      'characterList',
+      blockAnchor
+        .get('characterList')
+        .slice(0, s.startOffset)
+        .concat(firstPasted.get('characterList')),
     )
 
   if (firstPastedType !== 'unstyled') {
@@ -53,13 +45,10 @@ export default function handlePaste (editorState, pastedContent) {
   const lastPastedType = lastPasted.get('type')
 
   let meltedLast = lastPasted
-    .set('text', [
-      lastPasted.getText(),
-      blockFocus.getText().substr(s.endOffset),
-    ].join(''))
-    .set('characterList', lastPasted
-      .get('characterList')
-      .concat(blockFocus.get('characterList').slice(s.endOffset))
+    .set('text', [lastPasted.getText(), blockFocus.getText().substr(s.endOffset)].join(''))
+    .set(
+      'characterList',
+      lastPasted.get('characterList').concat(blockFocus.get('characterList').slice(s.endOffset)),
     )
 
   if (lastPastedType !== 'unstyled') {
@@ -73,16 +62,17 @@ export default function handlePaste (editorState, pastedContent) {
 
   editorState = EditorState.createWithContent(currentContent, createDecorator())
 
-  const offset = pastedBlocks.size > 1
-    ? rawLastPasted.getText().length
-    : s.endOffset + rawLastPasted.getText().length
+  const offset =
+    pastedBlocks.size > 1
+      ? rawLastPasted.getText().length
+      : s.endOffset + rawLastPasted.getText().length
 
-  const finalSelection = SelectionState
-    .createEmpty(lastPasted.key)
-    .merge({ anchorOffset: offset, focusOffset: offset })
+  const finalSelection = SelectionState.createEmpty(lastPasted.key).merge({
+    anchorOffset: offset,
+    focusOffset: offset,
+  })
 
   editorState = EditorState.forceSelection(editorState, finalSelection)
 
   return editorState
-
 }

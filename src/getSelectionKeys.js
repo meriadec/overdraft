@@ -1,4 +1,4 @@
-export default function getSelectionKeys (selection) {
+export default function getSelectionKeys(selection) {
   if (selection.getIsBackward()) {
     return {
       anchor: selection.getFocusKey(),
