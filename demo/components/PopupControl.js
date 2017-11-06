@@ -5,19 +5,18 @@ import Control from './Control'
 import Input from './Input'
 
 class PopupControl extends Component {
-
   state = {
     isOpened: false,
     color: '#000000',
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.isColor && nextProps.value !== this.state.color) {
       this.setState({ color: nextProps.value })
     }
   }
 
-  componentDidUpdate (prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState) {
     if (this.state.isOpened && !prevState.isOpened) {
       document.addEventListener('mousedown', this.closeOutside)
     } else if (!this.state.isOpened && prevState.isOpened) {
@@ -25,7 +24,7 @@ class PopupControl extends Component {
     }
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     document.removeEventListener('mousedown', this.closeOutside)
   }
 
@@ -48,13 +47,7 @@ class PopupControl extends Component {
   handleColorChange = c => this.setState({ color: c.hex })
 
   handleValidate = () => {
-
-    const {
-      isNumber,
-      isColor,
-      isLink,
-      onChange,
-    } = this.props
+    const { isNumber, isColor, isLink, onChange } = this.props
 
     if (isNumber) {
       onChange(Number(this._input.value))
@@ -72,38 +65,32 @@ class PopupControl extends Component {
     this.close()
   }
 
-  render () {
+  render() {
+    const { label, isNumber, isColor, isLink, value } = this.props
 
-    const {
-      label,
-      isNumber,
-      isColor,
-      isLink,
-      value,
-    } = this.props
-
-    const {
-      isOpened,
-      color,
-    } = this.state
+    const { isOpened, color } = this.state
 
     return (
-      <div className='PopupControl' ref={n => this._node = n}>
+      <div className="PopupControl" ref={n => (this._node = n)}>
         <Control
           onPress={() => this.setState({ isOpened: !isOpened })}
           active={isOpened}
-          label={isLink ? (
-            <span style={{ color: (value !== null && !isOpened) ? '#f16b6b' : '#fff' }}>
-              {label}
-            </span>
-          ) : label}
+          label={
+            isLink ? (
+              <span style={{ color: value !== null && !isOpened ? '#f16b6b' : '#fff' }}>
+                {label}
+              </span>
+            ) : (
+              label
+            )
+          }
         />
         {isOpened && (
-          <div className='PopupControl--popup'>
+          <div className="PopupControl--popup">
             {isNumber ? (
-              <div className='flex-center'>
+              <div className="flex-center">
                 <Input
-                  type='number'
+                  type="number"
                   autoFocus
                   value={value || 8}
                   min={8}
@@ -112,7 +99,7 @@ class PopupControl extends Component {
                   onChange={v => this.props.onChange(Number(v))}
                 />
                 <button
-                  className='demo-overdraft-control'
+                  className="demo-overdraft-control"
                   style={{ marginLeft: 5 }}
                   onClick={this.close}
                 >
@@ -121,19 +108,13 @@ class PopupControl extends Component {
               </div>
             ) : isColor ? (
               <div>
-                <ChromePicker
-                  color={color}
-                  onChangeComplete={this.handleColorChange}
-                />
+                <ChromePicker color={color} onChangeComplete={this.handleColorChange} />
                 <div style={{ marginTop: 5 }}>
-                  <button
-                    className='demo-overdraft-control'
-                    onClick={this.handleValidate}
-                  >
+                  <button className="demo-overdraft-control" onClick={this.handleValidate}>
                     {'OK'}
                   </button>
                   <button
-                    className='demo-overdraft-control'
+                    className="demo-overdraft-control"
                     style={{ marginLeft: 5 }}
                     onClick={this.handleRemove}
                   >
@@ -142,23 +123,23 @@ class PopupControl extends Component {
                 </div>
               </div>
             ) : isLink ? (
-              <div className='flex-center'>
+              <div className="flex-center">
                 <input
                   autoFocus
-                  type='text'
+                  type="text"
                   defaultValue={value || ''}
                   onKeyDown={this.handleKeyDown}
-                  ref={n => this._linkInput = n}
+                  ref={n => (this._linkInput = n)}
                 />
                 <button
-                  className='demo-overdraft-control'
+                  className="demo-overdraft-control"
                   style={{ marginLeft: 5 }}
                   onClick={this.handleValidate}
                 >
                   {'APPLY'}
                 </button>
                 <button
-                  className='demo-overdraft-control'
+                  className="demo-overdraft-control"
                   style={{ marginLeft: 5 }}
                   onClick={this.handleRemove}
                 >
@@ -171,7 +152,6 @@ class PopupControl extends Component {
       </div>
     )
   }
-
 }
 
 export default PopupControl

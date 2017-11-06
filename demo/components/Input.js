@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 
 class Input extends Component {
-
   state = {
     value: this.props.value,
   }
@@ -20,11 +19,8 @@ class Input extends Component {
     }
   }
 
-  render () {
-
-    const {
-      value,
-    } = this.state
+  render() {
+    const { value } = this.state
 
     const {
       value: v, // eslint-disable-line
@@ -33,15 +29,9 @@ class Input extends Component {
     } = this.props
 
     return (
-      <input
-        value={value}
-        onChange={this.handleChange}
-        onKeyDown={this.handleKeyDown}
-        {...props}
-      />
+      <input value={value} onChange={this.handleChange} onKeyDown={this.handleKeyDown} {...props} />
     )
   }
-
 }
 
 export default Input

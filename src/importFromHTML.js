@@ -87,7 +87,11 @@ function getHexColor(c) {
   if (!r) {
     return null
   }
-  const v = r[1].split(',').map(Number).map(toHex).join('')
+  const v = r[1]
+    .split(',')
+    .map(Number)
+    .map(toHex)
+    .join('')
   return `#${v}`
 }
 

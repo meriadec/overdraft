@@ -25,7 +25,8 @@ h1 > code {
 
 .version {
   position: absolute;
-  right: 0; top: 100%;
+  right: 0;
+  top: 100%;
   font-size: 12px;
 }
 

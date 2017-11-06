@@ -149,17 +149,19 @@ class Overdraft extends Component {
 
     const { value } = this.props
 
-    return editorState
-      ? <Editor
-          ref={n => (this._editor = n)}
-          placeholder="Insert content here..."
-          editorState={this.state.editorState}
-          onChange={this.editWithoutFocus}
-          blockStyleFn={blockStyleFn}
-          customStyleFn={customStyleFn}
-          handlePastedText={this.handlePastedText}
-        />
-      : <div dangerouslySetInnerHTML={{ __html: value }} />
+    return editorState ? (
+      <Editor
+        ref={n => (this._editor = n)}
+        placeholder="Insert content here..."
+        editorState={this.state.editorState}
+        onChange={this.editWithoutFocus}
+        blockStyleFn={blockStyleFn}
+        customStyleFn={customStyleFn}
+        handlePastedText={this.handlePastedText}
+      />
+    ) : (
+      <div dangerouslySetInnerHTML={{ __html: value }} />
+    )
   }
 }
 

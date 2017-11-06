@@ -5,11 +5,7 @@ function Link(props) {
 
   const { href } = contentState.getEntity(entityKey).getData()
 
-  return (
-    <a href={href}>
-      {children}
-    </a>
-  )
+  return <a href={href}>{children}</a>
 }
 
 const linkEntity = {
