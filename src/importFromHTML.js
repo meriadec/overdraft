@@ -60,9 +60,9 @@ const options = {
     }
   },
 
-  htmlToEntity: (nodeName, node) => {
+  htmlToEntity: (nodeName, node, createEntity) => {
     if (nodeName === 'a') {
-      return Entity.create('LINK', 'MUTABLE', { href: node.attributes.href.value })
+      return createEntity('LINK', 'MUTABLE', { href: node.attributes.href.value })
     }
   },
 }
